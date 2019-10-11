@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1090990784835",
+    "firebase_url": "https://test-89de2.firebaseio.com",
+    "project_id": "test-89de2",
+    "storage_bucket": "test-89de2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1090990784835:android:7174d71b37fc42a97aeff6",
+        "android_client_info": {
+          "package_name": "com.kernel.jobify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1090990784835-qlbbvvpc96a0j8ifogu26c3mrccien3i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kernel.jobify",
+            "certificate_hash": "bb46cbcc0769ae66ab332869f39879f49501ed08"
+          }
+        },
+        {
+          "client_id": "1090990784835-rehjdddm1hagjshamo4anqedmoh3ovar.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKWY0C67fEs9uxUha6x5LsfugVGAxjnrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1090990784835-rehjdddm1hagjshamo4anqedmoh3ovar.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
