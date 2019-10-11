@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="260dp"
+    android:orientation="vertical"
+    android:padding="9dp"
+    android:clipToPadding="false" >
+
+    <FrameLayout
+        android:elevation="6dp"
+        android:background="#eeeeee"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/newsimg"
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:padding="4dp"
+                android:src="@color/cardview_dark_background" />
+
+            <TextView
+                android:textColor="@color/textPrimary"
+                android:id="@+id/newstitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="NEWS TITLE HERE"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <TextView
+                android:textColor="@color/textSecondary"
+                android:id="@+id/newsdis"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="news discription will be shown here"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>
