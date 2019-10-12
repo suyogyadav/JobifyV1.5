@@ -1,5 +1,6 @@
 package com.kernel.jobify;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
         res.setLayoutManager(new LinearLayoutManager(this));
         res.setAdapter(new NewsAdapter(title,disc));
 
+/*        Intent intent = new Intent(this,JobifyService.class);
+        startService(intent);
+*/
     }
 
     public void pushjobs(String[] title,String[] disc)

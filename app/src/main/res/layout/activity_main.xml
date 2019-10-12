@@ -37,6 +37,16 @@
     </android.support.design.widget.AppBarLayout>
 
 
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/prgbar"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="100dp"
+        android:minHeight="100dp"
+        android:indeterminate="true"
+        />
+
     <android.support.v7.widget.RecyclerView
         android:elevation="6dp"
         android:id="@+id/rscview"

@@ -17,6 +17,13 @@
             </intent-filter>
         </activity>
         <service android:name=".JobifyService" />
+        <receiver android:name=".JobifyBrodcastReciever">
+            <intent-filter >
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
