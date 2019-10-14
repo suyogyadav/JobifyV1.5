@@ -16,6 +16,7 @@ public class JobifyBrodcastReciever extends BroadcastReceiver
 
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
+
         if (info != null && info.isConnected()) {
             context.startService(intent1);
             Log.i("ABCD","Internet is connected");

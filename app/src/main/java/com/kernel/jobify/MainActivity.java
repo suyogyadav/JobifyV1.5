@@ -1,6 +1,5 @@
 package com.kernel.jobify;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         databaseRef = database.getReference("jobs");
         String[] title = {"News Title Here","News Title Here","News Title Here","News Title Here","News Title Here"};
         String[] disc = {"News Discription Here","News Discription Here","News Discription Here","News Discription Here","News Discription Here",};
-        pushjobs(title,disc);
+        randomdata(title,disc);
         Log.i("ABCD","he tr dis bc");
         RecyclerView res  = findViewById(R.id.rscview);
         res.setLayoutManager(new LinearLayoutManager(this));
@@ -34,15 +33,30 @@ public class MainActivity extends AppCompatActivity {
 */
     }
 
-    public void pushjobs(String[] title,String[] disc)
+    public void randomdata(String[] title,String[] disc)
+    {
+        JobData[] jobs = new JobData[title.length];
+        for (int i=0;i<title.length;i++)
+        {
+            JobData job = new JobData();
+            job.setJobTitle(title[i]);
+            job.setJobDisc(disc[i]);
+            job.setJobLink(title[i]);
+
+            jobs[i] = job;
+        }
+
+        pushjobs(jobs);
+    }
+
+    public void pushjobs(JobData[] jobs)
     {
         Log.i("ABCD","push jobs call zhalay");
-        for (int i=0;i<title.length;i++)
+        for (int i=0;i<jobs.length;i++)
         {
             String id = databaseRef.push().getKey();
             Log.i("ABCD",""+id);
-            databaseRef.child("job"+i).setValue(title[i]);
-
+            databaseRef.child("job"+i).setValue(jobs[i]);
         }
 
     }
