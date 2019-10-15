@@ -38,9 +38,9 @@ public class JobifyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         isrunning = true;
-
+/*
         Log.i("ABCD", "Service has been Started");
-        /*FirebaseDatabase dbinst = FirebaseDatabase.getInstance();
+        FirebaseDatabase dbinst = FirebaseDatabase.getInstance();
         databaseRef = FirebaseDatabase.getInstance().getReference("jobs");
 
         databaseRef.addValueEventListener(new ValueEventListener() {
@@ -56,9 +56,8 @@ public class JobifyService extends Service {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        })
+        });
 */
-
         return super.onStartCommand(intent, flags, startId);
     }
 }

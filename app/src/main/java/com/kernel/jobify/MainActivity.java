@@ -1,6 +1,6 @@
 package com.kernel.jobify;
 
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,18 +23,41 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference databaseRef;
     List<JobData> jobslist;
+    long cout =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this,LoadingActivity.class);
-        startActivityForResult(intent,10);
+        database = FirebaseDatabase.getInstance();
+        databaseRef = database.getReference("jobs");
+
+        SharedPreferences mypref = getSharedPreferences("Job",0);
+        mypref.edit().putString("catpref","IT").apply();
+        mypref.edit().putLong("count",cout).apply();
+
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                cout = dataSnapshot.getChildrenCount();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        if (cout > mypref.getLong("count",0))
+        {
+            retrivedata();
+        }
+        //Intent intent = new Intent(this,LoadingActivity.class);
+        //startActivityForResult(intent,10);
 
         jobslist = new ArrayList<>();
 
-        database = FirebaseDatabase.getInstance();
-        databaseRef = database.getReference("jobs");
+
         String[] title = {"News Title Here","News Title Here","News Title Here","News Title Here","News Title Here"};
         String[] disc = {"News Discription Here","News Discription Here","News Discription Here","News Discription Here","News Discription Here",};
         randomdata();
@@ -102,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     JobData jobData = dataSnapshot1.getValue(JobData.class);
                     jobslist.add(jobData);
+
+                    Log.i("ABCD",""+dataSnapshot1.getKey());
                     Log.i("ABCD",""+jobData.getJobTitle()+""+jobslist.size());
                 }
                 Log.i("ABCD",""+jobslist.size());
