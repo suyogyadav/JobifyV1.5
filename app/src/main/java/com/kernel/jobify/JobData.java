@@ -3,31 +3,32 @@ package com.kernel.jobify;
 public class JobData
 {
 
-    public String JobTitle;
-    public String JobDisc;
-    public String JobLink;
+    public String jobTitle;
+    public String jobDisc;
+    public String jobLink;
 
     public String getJobTitle() {
-        return JobTitle;
+        return jobTitle;
     }
 
     public void setJobTitle(String jobTitle) {
-        JobTitle = jobTitle;
+        this.jobTitle = jobTitle;
     }
 
     public String getJobDisc() {
-        return JobDisc;
+        return jobDisc;
     }
 
     public void setJobDisc(String jobDisc) {
-        JobDisc = jobDisc;
+        this.jobDisc = jobDisc;
     }
 
     public String getJobLink() {
-        return JobLink;
+        return jobLink;
     }
 
     public void setJobLink(String jobLink) {
-        JobLink = jobLink;
+        this.jobLink = jobLink;
     }
+
 }
