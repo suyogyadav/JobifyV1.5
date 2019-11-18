@@ -1,6 +1,15 @@
 package com.kernel.jobify;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.app.job.JobService;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkRequest;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,9 +37,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+/*
+        JobifyBrodcastReciever br = new JobifyBrodcastReciever();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        intentFilter.addAction(getPackageName()+"android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(br,intentFilter);
 
+
+        Intent intent = new Intent(this,JobifyService.class);
+        startService(intent);
+*/
         database = FirebaseDatabase.getInstance();
         databaseRef = database.getReference("jobs");
+
+        scheduleJob();
 
         SharedPreferences mypref = getSharedPreferences("Job",0);
         mypref.edit().putString("catpref","IT").apply();
@@ -58,26 +78,26 @@ public class MainActivity extends AppCompatActivity {
         jobslist = new ArrayList<>();
 
 
-        String[] title = {"News Title Here","News Title Here","News Title Here","News Title Here","News Title Here"};
-        String[] disc = {"News Discription Here","News Discription Here","News Discription Here","News Discription Here","News Discription Here",};
-        randomdata();
+       // String[] title = {"News Title Here","News Title Here","News Title Here","News Title Here","News Title Here"};
+       // String[] disc = {"News Discription Here","News Discription Here","News Discription Here","News Discription Here","News Discription Here",};
+        //randomdata();
      //   pushjobs(title,disc);
 
 
         retrivedata();
 
 
-        Log.i("ABCD",""+title[1]);
-        RecyclerView res  = findViewById(R.id.rscview);
-        res.setLayoutManager(new LinearLayoutManager(this));
-        res.setAdapter(new NewsAdapter(title,disc));
+        //Log.i("ABCD",""+title[1]);
+        //RecyclerView res  = findViewById(R.id.rscview);
+        //res.setLayoutManager(new LinearLayoutManager(this));
+        //res.setAdapter(new NewsAdapter(title,disc));
 
 /*        Intent intent = new Intent(this,JobifyService.class);
         startService(intent);
 */
     }
 
-    public void randomdata()
+  /*  public void randomdata()
     {
         String[] tit = {"something here","something here","something here","something here","something here"};
         String[] dis = {"something there","something there","something there","something there","something there"};
@@ -107,19 +127,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
+*/
 
     public void retrivedata()
     {
         FirebaseDatabase dbinst = FirebaseDatabase.getInstance();
         databaseRef = FirebaseDatabase.getInstance().getReference("jobs");
 
-        databaseRef.addValueEventListener(new ValueEventListener() {
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                String[] title = {"News Title Here","News Title Here","News Title Here","News Title Here","News Title Here"};
-                String[] disc = {"News Discription Here","News Discription Here","News Discription Here","News Discription Here","News Discription Here",};
                 jobslist.clear(); /// remember remove this.
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
@@ -130,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("ABCD",""+jobData.getJobTitle()+""+jobslist.size());
                 }
                 Log.i("ABCD",""+jobslist.size());
+
+                String[] title = new String[jobslist.size()];
+                String[] disc = new String[jobslist.size()];
 
                 for (int i=0;i<jobslist.size();i++)
                 {
@@ -151,6 +172,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void scheduleJob()
+    {
+        JobInfo myjob = new JobInfo.Builder(0,new ComponentName(this,JobifyService.class))
+                .setPeriodic(600000)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(true)
+                .build();
+
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(this.JOB_SCHEDULER_SERVICE);
+        jobScheduler.schedule(myjob);
+    }
+
+
     /*public void pushjobs(String[] title,String[] disc)
     {
         Log.i("ABCD","push jobs call zhalay");
@@ -162,4 +196,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }*/
+
+    @Override
+    protected void onStop() {
+        stopService(new Intent(this, JobifyService.class));
+        super.onStop();
+    }
 }

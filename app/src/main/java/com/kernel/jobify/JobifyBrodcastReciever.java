@@ -12,15 +12,18 @@ public class JobifyBrodcastReciever extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        Intent intent1 = new Intent(context,JobifyService.class);
+        //Intent intent1 = new Intent(context,JobifyService.class);
+
+        Log.i("newABCD2","Broadcast Receiver called");
 
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
 
-        if (info != null && info.isConnected()) {
-            context.startService(intent1);
+        if (info!= null && info.isConnected()) {
+           // context.startService(intent1);
             Log.i("ABCD","Internet is connected");
         }
+        /*
         else
         {
             Log.i("ABCD","Internet is NOT connected");
@@ -29,6 +32,6 @@ public class JobifyBrodcastReciever extends BroadcastReceiver
                 Log.i("ABCD","Stopping the service from broadcast");
                 context.stopService(intent1);
             }
-        }
+        }*/
     }
 }
