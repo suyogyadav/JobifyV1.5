@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkRequest;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,10 +30,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
 
-    FirebaseDatabase database;
-    DatabaseReference databaseRef;
-    List<JobData> jobslist;
-    long cout =0;
+   // FirebaseDatabase database;
+   // DatabaseReference databaseRef;
+   // List<JobData> jobslist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,39 +43,31 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction(getPackageName()+"android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(br,intentFilter);
 
-
-        Intent intent = new Intent(this,JobifyService.class);
-        startService(intent);
 */
-        database = FirebaseDatabase.getInstance();
-        databaseRef = database.getReference("jobs");
+    //    Intent intent = new Intent(this,LoadingActivity.class);
+    //    startActivity(intent);
 
-        scheduleJob();
+     //   database = FirebaseDatabase.getInstance();
+    //    databaseRef = database.getReference("jobs");
 
-        SharedPreferences mypref = getSharedPreferences("Job",0);
-        mypref.edit().putString("catpref","IT").apply();
-        mypref.edit().putLong("count",cout).apply();
-
-        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                cout = dataSnapshot.getChildrenCount();
+            public void run() {
+                startActivity(new Intent(getBaseContext(),MainActivity2.class));
+                scheduleJob();
+                Log.i("poiu","activity sleeping");
             }
+        }, 5000);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
 
-        if (cout > mypref.getLong("count",0))
-        {
-            retrivedata();
-        }
+
+
         //Intent intent = new Intent(this,LoadingActivity.class);
         //startActivityForResult(intent,10);
 
-        jobslist = new ArrayList<>();
+   //     jobslist = new ArrayList<>();
 
 
        // String[] title = {"News Title Here","News Title Here","News Title Here","News Title Here","News Title Here"};
@@ -84,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
      //   pushjobs(title,disc);
 
 
-        retrivedata();
+        //retrivedata();
 
 
         //Log.i("ABCD",""+title[1]);
@@ -128,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 */
-
+/*
     public void retrivedata()
     {
         FirebaseDatabase dbinst = FirebaseDatabase.getInstance();
@@ -171,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
+*/
     public void scheduleJob()
     {
         JobInfo myjob = new JobInfo.Builder(0,new ComponentName(this,JobifyService.class))
@@ -196,10 +188,4 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }*/
-
-    @Override
-    protected void onStop() {
-        stopService(new Intent(this, JobifyService.class));
-        super.onStop();
-    }
 }
