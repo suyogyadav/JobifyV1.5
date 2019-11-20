@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,12 +52,17 @@ public class MainActivity extends AppCompatActivity {
      //   database = FirebaseDatabase.getInstance();
     //    databaseRef = database.getReference("jobs");
 
+        Intent intent = new Intent(this,JobifyService.class);
+        startService(intent);
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(getBaseContext(),MainActivity2.class));
                 scheduleJob();
+                //startActivity(new Intent(getBaseContext(),MainActivity2.class));
+                setContentView(R.layout.maincatlayout);
+
                 Log.i("poiu","activity sleeping");
             }
         }, 5000);
@@ -84,10 +91,15 @@ public class MainActivity extends AppCompatActivity {
         //res.setLayoutManager(new LinearLayoutManager(this));
         //res.setAdapter(new NewsAdapter(title,disc));
 
-/*        Intent intent = new Intent(this,JobifyService.class);
-        startService(intent);
-*/
+
+
     }
+
+    public void abconclick(View view)
+    {
+        startActivity(new Intent(this,MainActivity2.class));
+    }
+
 
   /*  public void randomdata()
     {
@@ -167,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
     public void scheduleJob()
     {
         JobInfo myjob = new JobInfo.Builder(0,new ComponentName(this,JobifyService.class))
-                .setPeriodic(600000)
+                .setPeriodic(1500000)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
                 .build();

@@ -124,7 +124,6 @@ public class JobifyService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters params) {
-        //registerReceiver(myreciever,intentFilter);
         ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
 
@@ -145,8 +144,6 @@ public class JobifyService extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters params) {
-        //unregisterReceiver(myreciever);
-       // shownotification("internet is gone","no internet connection",0);
         Log.i("qwer","JobService unregisted");
         return true;
     }
