@@ -95,11 +95,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void abconclick(View view)
+    public void btnIT(View view)
+
     {
-        startActivity(new Intent(this,MainActivity2.class));
+        Intent intent = new Intent(this,MainActivity2.class);
+        intent.putExtra("CAT","IT");
+        startActivity(intent);
     }
 
+    public void btnECS(View view)
+    {
+        Intent intent = new Intent(this,MainActivity2.class);
+        intent.putExtra("CAT","ECS");
+        startActivity(intent);
+    }
 
   /*  public void randomdata()
     {

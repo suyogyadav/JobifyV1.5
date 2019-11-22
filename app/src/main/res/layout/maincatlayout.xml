@@ -13,14 +13,15 @@
         android:layout_width="match_parent"
         android:layout_height="164dp"
         android:background="@color/colorPrimary"
-        android:elevation="8dp">
+        >
 
         <android.support.design.widget.CollapsingToolbarLayout
-            app:contentInsetLeft="0dp"
-            app:contentInsetStartWithNavigation="0dp"
+            android:elevation="0dp"
             app:title="@string/app_name"
-            app:expandedTitleGravity="center_horizontal"
+            android:paddingStart="50dp"
+            android:paddingEnd="70dp"
             app:collapsedTitleGravity="center_horizontal"
+            app:expandedTitleGravity="center"
             app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
             android:layout_width="match_parent"
@@ -49,105 +50,41 @@
         />
 
     <ScrollView
-        android:layout_width="wrap_content"
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:nestedScrollingEnabled="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
+        app:layout_anchor="@+id/scrollView2"
+        app:layout_anchorGravity="center"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
-            android:layout_margin="10dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <Button
+                android:id="@+id/btn1"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 android:layout_margin="10dp"
-                android:id="@+id/lay1"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="150dp">
+                android:onClick="btnIT"
+                android:text="IT"
+                android:textSize="40sp" />
 
-                <Button
-                    android:layout_margin="10dp"
-                    android:textSize="40sp"
-                    android:text="IT"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:onClick="abconclick"
-                    />
-
-                <Button
-                    android:text="IT"
-                    android:textSize="40sp"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:layout_marginStart="20dp"
-                    android:onClick="abconclick"
-                    />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <Button
+                android:id="@+id/btn2"
+                android:layout_toRightOf="@id/btn1"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 android:layout_margin="10dp"
-                android:id="@+id/lay2"
-                android:layout_below="@id/lay1"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="150dp">
-
-                <Button
-
-                    android:layout_margin="10dp"
-                    android:textSize="40sp"
-                    android:text="IT"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:onClick="abconclick"
-                    />
-
-                <Button
-                    android:text="IT"
-                    android:textSize="40sp"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:layout_marginStart="20dp"
-                    android:onClick="abconclick"
-                    />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_margin="10dp"
-                android:id="@+id/lay3"
-                android:layout_below="@id/lay2"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="150dp">
-
-                <Button
-
-                    android:layout_margin="10dp"
-                    android:textSize="40sp"
-                    android:text="IT"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:onClick="abconclick"
-                    />
-
-                <Button
-                    android:text="IT"
-                    android:textSize="40sp"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:layout_marginStart="20dp"
-                    android:onClick="abconclick"
-                    />
-
-            </LinearLayout>
+                android:onClick="btnECS"
+                android:text="IT"
+                android:textSize="40sp" />
 
         </RelativeLayout>
 
     </ScrollView>
+
+
 
 </android.support.design.widget.CoordinatorLayout>

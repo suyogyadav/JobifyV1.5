@@ -8,32 +8,20 @@
     tools:context=".MainActivity2">
 
     <android.support.design.widget.AppBarLayout
-
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="164dp"
+        android:layout_height="56dp"
         android:background="@color/colorPrimary"
-        android:elevation="8dp">
+        >
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            app:contentInsetLeft="0dp"
-            app:contentInsetStartWithNavigation="0dp"
+        <android.support.v7.widget.Toolbar
             app:title="@string/app_name"
-            app:expandedTitleGravity="center_horizontal"
-            app:collapsedTitleGravity="center_horizontal"
-            app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            app:titleTextColor="#ffffff"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <android.support.v7.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:layout_collapseMode="pin" />
-
-        </android.support.design.widget.CollapsingToolbarLayout>
+            android:layout_marginEnd="10dp"
+            />
 
     </android.support.design.widget.AppBarLayout>
 

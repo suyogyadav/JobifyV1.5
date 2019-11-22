@@ -7,6 +7,16 @@ public class JobData
     public String jobDisc;
     public String jobLink;
 
+    public String getJobPhotoLink() {
+        return jobPhotoLink;
+    }
+
+    public void setJobPhotoLink(String jobPhotoLink) {
+        this.jobPhotoLink = jobPhotoLink;
+    }
+
+    public String jobPhotoLink;
+
     public String getJobTitle() {
         return jobTitle;
     }
