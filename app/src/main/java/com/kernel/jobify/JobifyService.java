@@ -2,27 +2,25 @@ package com.kernel.jobify;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.Service;
 
 import android.app.job.JobParameters;
 import android.app.job.JobService;
-import android.content.Intent;
 
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.os.IBinder;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.telecom.ConnectionService;
 import android.util.Log;
 
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,15 +33,14 @@ import java.util.List;
 
 public class JobifyService extends JobService {
     DatabaseReference databaseRef;
+    int ct;
     public static boolean isrunning;
     public int oldsize = 5;
     List<JobData> jobslist;
-    JobifyBrodcastReciever myreciever;
     IntentFilter intentFilter;
 
     @Override
     public void onCreate() {
-        myreciever = new JobifyBrodcastReciever();
         intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         super.onCreate();
     }
@@ -56,43 +53,78 @@ public class JobifyService extends JobService {
 
             Log.i("ABCD", "Service Call Zhali");
 
+            SharedPreferences catcount = this.getSharedPreferences("catcount",0);
+            SharedPreferences catpref = this.getSharedPreferences("catpref",0);
+            int c = catcount.getInt("count",0);
+            for (int i=0;i<c;i++) {
+                jobslist.clear();
+                String cat = catpref.getString("cat"+i,"null");
+                Log.i("TYUI","called "+cat);
+                if (cat != null && !cat.equals("null"))
+                {
+                    databaseRef = FirebaseDatabase.getInstance().getReference(cat);
+                    databaseRef.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            FirebaseDatabase dbinst = FirebaseDatabase.getInstance();
-            databaseRef = FirebaseDatabase.getInstance().getReference("jobs");
-
-            databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    jobslist.clear(); /// remember remove this.
-
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        JobData jobData = dataSnapshot1.getValue(JobData.class);
-                        jobslist.add(jobData);
-
-                        Log.i("newABCD",""+dataSnapshot1.getKey());
-                        Log.i("newABCD",""+jobData.getJobTitle()+""+jobslist.size());
-                    }
-                    Log.i("newABCD",""+jobslist.size());
-
-                    if (jobslist.size()>oldsize)
-                    {
-                        int j=0;
-                        for(int i=oldsize;i<jobslist.size();i++)
-                        {
-
-                            shownotification(jobslist.get(i).getJobTitle(), jobslist.get(i).getJobDisc(),j);
-                            j++;
+                            JobData jobData = dataSnapshot.getValue(JobData.class);
+                            shownotification(jobData.getJobTitle(), jobData.getJobDisc(), ct++);
                         }
-                    }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                   /* databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            jobslist.clear(); /// remember remove this.
+
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                JobData jobData = dataSnapshot1.getValue(JobData.class);
+                                jobslist.add(jobData);
+
+                                Log.i("newABCD", "" + dataSnapshot1.getKey());
+                                Log.i("newABCD", "" + jobData.getJobTitle() + "" + jobslist.size());
+                            }
+                            Log.i("newABCD", "" + jobslist.size());
+
+                            if (jobslist.size() > oldsize) {
+                                int j = 0;
+                                for (int i = oldsize; i < jobslist.size(); i++) {
+
+                                    shownotification(jobslist.get(i).getJobTitle(), jobslist.get(i).getJobDisc(), j);
+                                    j++;
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });*/
 
                 }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
+            }
      }
 
     public void shownotification(String title, String text,int id)
@@ -124,6 +156,7 @@ public class JobifyService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters params) {
+        ct =0;
         ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
 

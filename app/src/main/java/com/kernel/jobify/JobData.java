@@ -1,11 +1,23 @@
 package com.kernel.jobify;
 
-public class JobData
+import java.io.Serializable;
+
+public class JobData implements Serializable
 {
 
     public String jobTitle;
     public String jobDisc;
     public String jobLink;
+
+    public String getJobApplyLink() {
+        return jobApplyLink;
+    }
+
+    public void setJobApplyLink(String jobApplyLink) {
+        this.jobApplyLink = jobApplyLink;
+    }
+
+    public String jobApplyLink;
 
     public String getJobPhotoLink() {
         return jobPhotoLink;

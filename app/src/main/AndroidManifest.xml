@@ -14,7 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".JobDisActivity"></activity>
-        <activity android:name=".Catag" />
         <activity android:name=".MainActivity2" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -28,11 +27,6 @@
             android:name=".JobifyService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <receiver android:name=".JobifyBrodcastReciever">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

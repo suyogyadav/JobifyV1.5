@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity2 extends AppCompatActivity {
@@ -63,22 +64,11 @@ public class MainActivity2 extends AppCompatActivity {
                     }
                     Log.i("ABCD", "" + jobslist.size());
 
-                    String[] title = new String[jobslist.size()];
-                    String[] disc = new String[jobslist.size()];
-                    String[] photolink = new String[jobslist.size()];
-
-                    int j = 0;
-
-                    for (int i = jobslist.size() - 1; i >= 0; i--) {
-                        title[i] = jobslist.get(j).getJobTitle();
-                        disc[i] = jobslist.get(j).getJobDisc();
-                        photolink[i] = jobslist.get(j).getJobPhotoLink();
-                        j++;
-                    }
+                    Collections.reverse(jobslist);
 
                     RecyclerView res = findViewById(R.id.rscview);
                     res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
-                    res.setAdapter(new NewsAdapter(title, disc, photolink));
+                    res.setAdapter(new NewsAdapter(jobslist,getBaseContext()));
                 }
             }
 
