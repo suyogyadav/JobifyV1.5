@@ -6,7 +6,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +17,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -26,6 +34,8 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences settings;
     SharedPreferences catpref;
     SharedPreferences catcount;
+    int temp;
+    int fori;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -70,16 +80,49 @@ public class MainActivity extends AppCompatActivity
         catcount = this.getSharedPreferences("catcount",0);
         SharedPreferences.Editor editor = catpref.edit();
         SharedPreferences.Editor editor1 = catcount.edit();
-        ArrayList<String> lst = ListAdapterPref.msg();
-        editor1.putInt("count",lst.size());
-        editor1.commit();
-        for (int i=0;i<lst.size();i++)
+        final ArrayList<String> lst = ListAdapterPref.msg();
+        if (lst.size()==0)
         {
-                editor.putString("cat"+i, lst.get(i));
-                Log.i("TYUI",lst.get(i));
+            Toast.makeText(this,"Please Select At Least One Preference",Toast.LENGTH_SHORT).show();
         }
-        editor.commit();
-        setContentView(R.layout.maincatlayout);
+        else {
+            editor1.putInt("count", lst.size());
+            editor1.commit();
+            temp = 0;
+            for (fori = 0; fori < lst.size(); fori++) {
+                editor.putString("cat" + fori, lst.get(fori));
+                Log.i("TYUI", lst.get(fori));
+                runthread(lst.get(fori));
+            }
+            editor.commit();
+            setContentView(R.layout.maincatlayout);
+        }
+    }
+    public void runthread(final String abcd)
+    {
+        final SharedPreferences oldcount1 = this.getSharedPreferences("oldcount",0);
+        final SharedPreferences oldpointer1 = this.getSharedPreferences("oldpointer",0);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(abcd);
+                databaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        int count =(int) dataSnapshot.getChildrenCount();
+                        oldcount1.edit().putInt(abcd,count).commit();
+                        oldpointer1.edit().putInt(abcd,count).commit();
+                        Log.i("ERTY",abcd+"put shared pref called");
+                        temp++;
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
     }
 
     public void btnIT(View view)
@@ -94,6 +137,35 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("CAT","ECS");
         startActivity(intent);
     }
+
+    public void btnMECH(View view)
+    {
+        Intent intent = new Intent(this,MainActivity2.class);
+        intent.putExtra("CAT","MECH");
+        startActivity(intent);
+    }
+
+    public void btnCIVIL(View view)
+    {
+        Intent intent = new Intent(this,MainActivity2.class);
+        intent.putExtra("CAT","CIVIL");
+        startActivity(intent);
+    }
+
+    public void btnGOVT(View view)
+    {
+        Intent intent = new Intent(this,MainActivity2.class);
+        intent.putExtra("CAT","GOVT");
+        startActivity(intent);
+    }
+
+    public void btnINTERN(View view)
+    {
+        Intent intent = new Intent(this,MainActivity2.class);
+        intent.putExtra("CAT","INTERN");
+        startActivity(intent);
+    }
+
 
     public void scheduleJob()
     {

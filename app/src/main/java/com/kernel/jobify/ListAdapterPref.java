@@ -30,6 +30,8 @@ public class ListAdapterPref extends RecyclerView.Adapter<ListAdapterPref.listho
     public listholder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View view = inflater.inflate(R.layout.listitem,viewGroup,false);
+        view.setMinimumHeight((viewGroup.getHeight()/6));
+
         return new listholder(view,context);
     }
 
@@ -72,6 +74,10 @@ public class ListAdapterPref extends RecyclerView.Adapter<ListAdapterPref.listho
             if (checkBox.isChecked())
             {
                 checkBox.setChecked(false);
+                if (list.size()!=0)
+                {
+                    list.remove(abcd[pos]);
+                }
             }
             else
             {

@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 
 import android.support.annotation.NonNull;
@@ -32,10 +33,11 @@ import java.util.List;
 
 
 public class JobifyService extends JobService {
-    DatabaseReference databaseRef;
+
     int ct;
+    int newchildcount;
+
     public static boolean isrunning;
-    public int oldsize = 5;
     List<JobData> jobslist;
     IntentFilter intentFilter;
 
@@ -48,6 +50,7 @@ public class JobifyService extends JobService {
 
 
         public void Dbscan() {
+            newchildcount = 0;
             isrunning = true;
             jobslist = new ArrayList<>();
 
@@ -55,42 +58,15 @@ public class JobifyService extends JobService {
 
             SharedPreferences catcount = this.getSharedPreferences("catcount",0);
             SharedPreferences catpref = this.getSharedPreferences("catpref",0);
+
             int c = catcount.getInt("count",0);
             for (int i=0;i<c;i++) {
                 jobslist.clear();
-                String cat = catpref.getString("cat"+i,"null");
+                final String cat = catpref.getString("cat"+i,"null");
                 Log.i("TYUI","called "+cat);
                 if (cat != null && !cat.equals("null"))
                 {
-                    databaseRef = FirebaseDatabase.getInstance().getReference(cat);
-                    databaseRef.addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                            JobData jobData = dataSnapshot.getValue(JobData.class);
-                            shownotification(jobData.getJobTitle(), jobData.getJobDisc(), ct++);
-                        }
-
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+                    getntification(cat);
                    /* databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -154,6 +130,51 @@ public class JobifyService extends JobService {
 
     }
 
+    public void getntification(String cat1)
+    {
+        final SharedPreferences oldcount1 = this.getSharedPreferences("oldcount",0);
+        final SharedPreferences oldpointer1 = this.getSharedPreferences("oldpointer",0);
+        final String cat = cat1;
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                final int oldcount = oldcount1.getInt(cat, 0);
+                final int oldpointer = oldpointer1.getInt(cat, 0);
+                DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference(cat);
+                databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        newchildcount = (int) dataSnapshot.getChildrenCount();
+                        Log.i("TYUI", "on datachange is it called");
+                        Log.i("TYUI", "old pointer " + oldpointer);
+                        Log.i("TYUI", "old count " + oldcount);
+                        Log.i("TYUI", "new child count " + newchildcount);
+
+                        if (newchildcount > oldcount) {
+                            Log.i("TYUI", "New child count is greater than oldcount");
+                            for (int i = oldpointer; i < newchildcount; i++) {
+                                Log.i("TYUI", "Itrating through the avilable list of items");
+                                String str = "" + i;
+                                str = String.format("%03d", Integer.parseInt(str));
+                                Log.i("ERTY", str);
+                                JobData jobData = dataSnapshot.child("job" + str).getValue(JobData.class);
+                                shownotification(jobData.getJobTitle(), jobData.getJobDisc(), ct++);
+                            }
+                            oldcount1.edit().putInt(cat, newchildcount).commit();
+                            Log.i("TYUI",""+oldcount1.getInt(cat,0));
+                            oldpointer1.edit().putInt(cat, newchildcount).commit();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+    }
+
     @Override
     public boolean onStartJob(JobParameters params) {
         ct =0;
@@ -165,7 +186,7 @@ public class JobifyService extends JobService {
             Log.i("qwer","JobService Called");
 
             Dbscan();
-            if (jobslist!=null && jobslist.size()>oldsize)
+            if (jobslist!=null)
             {
                 jobFinished(params,true );
                 Log.i("qwer","JobService Finished");
