@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+
 import java.io.InputStream;
 import java.util.List;
 
@@ -82,6 +84,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.newsviewholder
     }
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
         public DownloadImageTask(ImageView bmImage) {
             this.bmImage = bmImage;

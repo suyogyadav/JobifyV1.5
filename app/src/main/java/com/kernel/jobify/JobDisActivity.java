@@ -2,7 +2,9 @@ package com.kernel.jobify;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class JobDisActivity extends AppCompatActivity {
 
@@ -38,7 +42,14 @@ public class JobDisActivity extends AppCompatActivity {
 
     public void setdata(View view)
     {
-        Toast.makeText(this,"Apply Button Clicked",Toast.LENGTH_SHORT).show();
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setToolbarColor(getResources().getColor(R.color.colorPrimary));
+        builder.addDefaultShareMenuItem();
+        builder.setShowTitle(true);
+
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.launchUrl(this, Uri.parse(showdata.jobLink));
+
     }
 
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

@@ -29,6 +29,6 @@
         android:layout_centerInParent="true"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@mipmap/blnt"/>
+        app:srcCompat="@mipmap/blnt"/>
 
 </RelativeLayout>
