@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -43,7 +44,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.newsviewholder
     public void onBindViewHolder(newsviewholder viewHolder, int i)
     {
         if (jobslist.get(i).getJobPhotoLink()!=null) {
-            new DownloadImageTask(viewHolder.imgicon)
+            new DownloadImageTask(viewHolder.imgicon,viewHolder.progressBar)
                     .execute(jobslist.get(i).getJobPhotoLink());
         }
         else
@@ -62,6 +63,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.newsviewholder
 
     public class newsviewholder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
+        ProgressBar progressBar;
         ImageView imgicon;
         TextView title;
         Context ctx;
@@ -71,6 +73,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.newsviewholder
             itemView.setOnClickListener(this);
             imgicon = itemView.findViewById(R.id.newsimg);
             title = itemView.findViewById(R.id.newstitle);
+            progressBar = itemView.findViewById(R.id.newsprogressbar);
         }
 
         @Override
@@ -84,13 +87,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.newsviewholder
     }
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
+        ProgressBar progressBar;
 
         @Override
         protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
 
-        public DownloadImageTask(ImageView bmImage) {
+        public DownloadImageTask(ImageView bmImage,ProgressBar progressBar) {
+            this.progressBar = progressBar;
             this.bmImage = bmImage;
         }
 
@@ -107,7 +113,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.newsviewholder
             return mIcon11;
         }
 
-        protected void onPostExecute(Bitmap result) {
+        protected void onPostExecute(Bitmap result){
+            progressBar.setVisibility(View.GONE);
             bmImage.setImageBitmap(result);
         }
     }

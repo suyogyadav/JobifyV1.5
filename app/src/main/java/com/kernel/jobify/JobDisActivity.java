@@ -7,22 +7,23 @@ import android.os.AsyncTask;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class JobDisActivity extends AppCompatActivity {
 
 
     JobData showdata;
+    ProgressBar progressBar;
     Button apply;
+    TextView title;
     TextView disc;
     ImageView img;
     @Override
@@ -30,14 +31,40 @@ public class JobDisActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jobdis);
 
+        Toolbar toolbar = findViewById(R.id.jobdistoolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         showdata = (JobData) getIntent().getSerializableExtra("jobdata");
+
+        progressBar = findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.VISIBLE);
+
         apply = findViewById(R.id.jobdisbtn);
         disc = findViewById(R.id.jobdisdis);
+        title = findViewById(R.id.jobdistitle);
         img = findViewById(R.id.jobdisimg);
-        new DownloadImageTask(img)
-                .execute(showdata.jobPhotoLink);
+
+        if (showdata.getJobPhotoLink()!=null)
+        {
+            new DownloadImageTask(img)
+                    .execute(showdata.jobPhotoLink);
+        }
+        title.setText(showdata.getJobTitle());
         disc.setText(showdata.getJobDisc());
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     public void setdata(View view)
@@ -73,6 +100,7 @@ public class JobDisActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Bitmap result) {
+            progressBar.setVisibility(View.GONE);
             bmImage.setImageBitmap(result);
         }
     }
