@@ -7,6 +7,14 @@
     android:background="@color/colorPrimary"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:src="@mipmap/ic_launcher"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/loadingappname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"/>
+
     <TextView
         android:id="@+id/loadingappname"
         android:layout_width="wrap_content"

@@ -2,4 +2,14 @@
     <string name="app_name">Jobify</string>
     <string name="title_activity_news_space">NewsSpace</string>
     <string name="title_activity_main2">MainActivity2</string>
+
+    <string-array name="catlist">
+        <item>IT</item>
+        <item>Electronics And EnTC</item>
+        <item>Mechanical</item>
+        <item>Civil</item>
+        <item>Government</item>
+        <item>Internship</item>
+    </string-array>
+
 </resources>

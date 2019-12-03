@@ -47,11 +47,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.newsviewholder
             new DownloadImageTask(viewHolder.imgicon,viewHolder.progressBar)
                     .execute(jobslist.get(i).getJobPhotoLink());
         }
-        else
-        {
-            viewHolder.imgicon.setImageResource(R.drawable.ic_launcher_foreground);
-        }
-
         viewHolder.title.setText( jobslist.get(i).getJobTitle());
     }
 
@@ -75,6 +70,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.newsviewholder
             title = itemView.findViewById(R.id.newstitle);
             progressBar = itemView.findViewById(R.id.newsprogressbar);
         }
+
 
         @Override
         public void onClick(View v) {
