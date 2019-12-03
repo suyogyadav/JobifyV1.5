@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
 
         settings = this.getSharedPreferences("appInfo", 0);
         firstTime = settings.getBoolean("first_time", true);
-
+        catcount = getSharedPreferences("catcount",0);
         context = this;
 
         Handler handler = new Handler();
@@ -65,10 +65,19 @@ public class MainActivity extends AppCompatActivity
                     res.setAdapter(new ListAdapterPref(getBaseContext()));
                 }
                 else {
-                    setContentView(R.layout.maincatlayout);
-                    RecyclerView res = findViewById(R.id.catresview);
-                    res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
-                    res.setAdapter(new CatAdapter(getBaseContext()));
+                    if (catcount.getInt("count",0)==0)
+                    {
+                        setContentView(R.layout.preference_layout);
+                        RecyclerView res = findViewById(R.id.preflist);
+                        res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+                        res.setAdapter(new ListAdapterPref(getBaseContext()));
+                    }
+                    else {
+                        setContentView(R.layout.maincatlayout);
+                        RecyclerView res = findViewById(R.id.catresview);
+                        res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+                        res.setAdapter(new CatAdapter(getBaseContext()));
+                    }
                 }
 
                 Log.i("poiu","activity sleeping");
@@ -98,6 +107,9 @@ public class MainActivity extends AppCompatActivity
             }
             editor.commit();
             setContentView(R.layout.maincatlayout);
+            RecyclerView res = findViewById(R.id.catresview);
+            res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+            res.setAdapter(new CatAdapter(getBaseContext()));
         }
     }
     public void runthread(final String abcd)

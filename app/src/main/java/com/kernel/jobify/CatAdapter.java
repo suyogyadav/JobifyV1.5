@@ -2,7 +2,6 @@ package com.kernel.jobify;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,9 +13,8 @@ import android.widget.TextView;
 
 public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
 
-    static int fori;
     String[][] catlist =  {{"IT","ECS"},{"MECH","CIVIL"},{"GOVT","INTERN"}};
-    String[][] showlist =  {{"IT","Electronics and EnTC"},{"Mechanical","civil"},{"Government","Internship"}};
+    String[][] showlist =  {{"IT","Electronics and EnTC"},{"Mechanical","Civil"},{"Government","Internship"}};
     Context ctx;
 
     public CatAdapter(Context ctx)
@@ -29,7 +27,7 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
     public CatViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View view = inflater.inflate(R.layout.catlistitem,viewGroup,false);
-        return new CatAdapter.CatViewHolder(view,ctx,i);
+        return new CatAdapter.CatViewHolder(view,ctx);
     }
 
     @Override
@@ -38,26 +36,6 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
         catViewHolder.catimg2.setImageResource(R.mipmap.ic_launcher);
         catViewHolder.catname1.setText(showlist[i][0]);
         catViewHolder.catname2.setText(showlist[i][1]);
-        fori=i;
-        catViewHolder.frame1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ctx,MainActivity2.class);
-                intent.putExtra("CAT",catlist[fori][0]);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                ctx.startActivity(intent);
-            }
-        });
-
-        catViewHolder.frame2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ctx,MainActivity2.class);
-                intent.putExtra("CAT",catlist[fori][1]);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                ctx.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -73,15 +51,34 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
         TextView catname2;
         FrameLayout frame1;
         FrameLayout frame2;
-        public CatViewHolder(@NonNull View itemView, final Context ctx,int i) {
+        public CatViewHolder(@NonNull View itemView, final Context ctx) {
             super(itemView);
-            fori = i;
             catimg1 = itemView.findViewById(R.id.catimg);
             catimg2 = itemView.findViewById(R.id.catimg2);
             catname1 = itemView.findViewById(R.id.catname);
             catname2 = itemView.findViewById(R.id.catname2);
             frame1 = itemView.findViewById(R.id.frame1);
             frame2 = itemView.findViewById(R.id.frame2);
+
+            frame1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ctx,MainActivity2.class);
+                    intent.putExtra("CAT",catlist[getAdapterPosition()][0]);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ctx.startActivity(intent);
+                }
+            });
+
+            frame2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ctx,MainActivity2.class);
+                    intent.putExtra("CAT",catlist[getAdapterPosition()][1]);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ctx.startActivity(intent);
+                }
+            });
         }
     }
 }
