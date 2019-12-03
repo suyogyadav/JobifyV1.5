@@ -3,9 +3,12 @@ package com.kernel.jobify;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -54,8 +57,8 @@ public class JobifyService extends JobService {
 
             Log.i("ABCD", "Service Call Zhali");
 
-            SharedPreferences catcount = this.getSharedPreferences("catcount",0);
-            SharedPreferences catpref = this.getSharedPreferences("catpref",0);
+            final SharedPreferences catcount = this.getSharedPreferences("catcount",0);
+            final SharedPreferences catpref = this.getSharedPreferences("catpref",0);
 
             int c = catcount.getInt("count",0);
             for (int i=0;i<c;i++) {
@@ -65,65 +68,46 @@ public class JobifyService extends JobService {
                 if (cat != null && !cat.equals("null"))
                 {
                     getntification(cat);
-                   /* databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                            jobslist.clear(); /// remember remove this.
-
-                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                JobData jobData = dataSnapshot1.getValue(JobData.class);
-                                jobslist.add(jobData);
-
-                                Log.i("newABCD", "" + dataSnapshot1.getKey());
-                                Log.i("newABCD", "" + jobData.getJobTitle() + "" + jobslist.size());
-                            }
-                            Log.i("newABCD", "" + jobslist.size());
-
-                            if (jobslist.size() > oldsize) {
-                                int j = 0;
-                                for (int i = oldsize; i < jobslist.size(); i++) {
-
-                                    shownotification(jobslist.get(i).getJobTitle(), jobslist.get(i).getJobDisc(), j);
-                                    j++;
-                                }
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });*/
-
                 }
             }
      }
 
-    public void shownotification(String title, String text,int id)
+    public void shownotification(String title,String disc,String link,String photolink,int id)
     {
-        createchannel(title,text);
+        Log.i("newtest","shownotifcation called");
+        Log.i("newtest",title);
+        createchannel(title);
+        JobData jobData = new JobData();
+        jobData.setJobTitle(title);
+        jobData.setJobDisc(disc);
+        jobData.setJobLink(link);
+        jobData.setJobPhotoLink(photolink);
+        Intent intent = new Intent(this,JobDisActivity.class);
+        intent.putExtra("jobdata",jobData);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntent(intent);
+
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "notification")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentIntent(pendingIntent)
                 .setContentTitle(title)
-                .setContentText(text)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(id, builder.build());
     }
 
-    public void createchannel(String title,String text)
+    public void createchannel(String title)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
             NotificationChannel notificationChannel = new NotificationChannel("notification",title,NotificationManager.IMPORTANCE_DEFAULT);
-            notificationChannel.setDescription(text);
 
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(notificationChannel);
+            Log.i("newtest","notifcation channel created for "+title);
         }
 
     }
@@ -143,24 +127,24 @@ public class JobifyService extends JobService {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         newchildcount = (int) dataSnapshot.getChildrenCount();
-                        Log.i("TYUI", "on datachange is it called");
+                        Log.i("TYUI", "on datachange is called");
                         Log.i("TYUI", "old pointer " + oldpointer);
                         Log.i("TYUI", "old count " + oldcount);
                         Log.i("TYUI", "new child count " + newchildcount);
 
                         if (newchildcount > oldcount) {
                             Log.i("TYUI", "New child count is greater than oldcount");
-                            for (int i = oldpointer; i < newchildcount; i++) {
+                            for (int i = oldpointer+1; i < newchildcount; i++) {
                                 Log.i("TYUI", "Itrating through the avilable list of items");
                                 String str = "" + i;
                                 str = String.format("%03d", Integer.parseInt(str));
                                 Log.i("ERTY", str);
                                 JobData jobData = dataSnapshot.child("job" + str).getValue(JobData.class);
-                                shownotification(jobData.getJobTitle(), jobData.getJobDisc(), ct++);
+                                shownotification(jobData.getJobTitle(),jobData.getJobDisc(),jobData.getJobLink(),jobData.getJobPhotoLink(), ct++);
                             }
                             oldcount1.edit().putInt(cat, newchildcount).commit();
                             Log.i("TYUI",""+oldcount1.getInt(cat,0));
-                            oldpointer1.edit().putInt(cat, newchildcount).commit();
+                            oldpointer1.edit().putInt(cat, newchildcount-1).commit();
                         }
                     }
 
@@ -184,18 +168,17 @@ public class JobifyService extends JobService {
             Log.i("qwer","JobService Called");
 
             Dbscan();
-            if (jobslist!=null)
-            {
-                jobFinished(params,true );
-                Log.i("qwer","JobService Finished");
-            }
-
         }
         return true;
     }
 
     @Override
     public boolean onStopJob(JobParameters params) {
+        if (jobslist!=null)
+        {
+            jobFinished(params,true );
+            Log.i("qwer","JobService Finished");
+        }
         Log.i("qwer","JobService unregisted");
         return true;
     }

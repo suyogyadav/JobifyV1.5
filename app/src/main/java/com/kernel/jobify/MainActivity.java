@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity
         else {
             editor1.putInt("count", lst.size());
             editor1.commit();
-            temp = 0;
             for (fori = 0; fori < lst.size(); fori++) {
                 editor.putString("cat" + fori, lst.get(fori));
                 Log.i("TYUI", lst.get(fori));
@@ -110,9 +109,8 @@ public class MainActivity extends AppCompatActivity
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         int count =(int) dataSnapshot.getChildrenCount();
                         oldcount1.edit().putInt(abcd,count).commit();
-                        oldpointer1.edit().putInt(abcd,count).commit();
+                        oldpointer1.edit().putInt(abcd,count-1).commit();
                         Log.i("ERTY",abcd+"put shared pref called");
-                        temp++;
                     }
 
                     @Override
