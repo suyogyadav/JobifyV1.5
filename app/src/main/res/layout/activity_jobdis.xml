@@ -10,14 +10,14 @@
     android:weightSum="10">
 
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbarjobdis"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/colorPrimary"
         >
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/jobdistoolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -31,9 +31,9 @@
                 android:textColor="#FFFFFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:layout_below="@id/appbarjobdis"

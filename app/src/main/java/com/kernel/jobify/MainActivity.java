@@ -8,16 +8,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         scheduleJob();
+        MobileAds.initialize(this,"ca-app-pub-3940256099942544~3347511713");
 
         settings = this.getSharedPreferences("appInfo", 0);
         firstTime = settings.getBoolean("first_time", true);
@@ -74,9 +77,14 @@ public class MainActivity extends AppCompatActivity
                     }
                     else {
                         setContentView(R.layout.maincatlayout);
+
                         RecyclerView res = findViewById(R.id.catresview);
                         res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
                         res.setAdapter(new CatAdapter(getBaseContext()));
+
+                        AdView adView = findViewById(R.id.adView);
+                        AdRequest adRequest = new AdRequest.Builder().build();
+                        adView.loadAd(adRequest);
                     }
                 }
 

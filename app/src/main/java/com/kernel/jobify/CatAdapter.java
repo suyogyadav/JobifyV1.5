@@ -2,8 +2,6 @@ package com.kernel.jobify;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +9,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
 
     String[][] catlist =  {{"IT","ECS"},{"MECH","CIVIL"},{"GOVT","INTERN"}};
     String[][] showlist =  {{"IT","Electronics and EnTC"},{"Mechanical","Civil"},{"Government","Internship"}};
+    int[][] catlogo = {{R.drawable.catlogo01,R.drawable.catlogo02},{R.drawable.catlogo03,R.drawable.catlogo04},{R.drawable.catlogo05,R.drawable.catlogo06}};
     Context ctx;
 
     public CatAdapter(Context ctx)
@@ -28,12 +30,14 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View view = inflater.inflate(R.layout.catlistitem,viewGroup,false);
         return new CatAdapter.CatViewHolder(view,ctx);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull CatViewHolder catViewHolder, int i) {
-        catViewHolder.catimg1.setImageResource(R.mipmap.ic_launcher);
-        catViewHolder.catimg2.setImageResource(R.mipmap.ic_launcher);
+
+        catViewHolder.catimg1.setImageResource(catlogo[i][0]);
+        catViewHolder.catimg2.setImageResource(catlogo[i][1]);
         catViewHolder.catname1.setText(showlist[i][0]);
         catViewHolder.catname2.setText(showlist[i][1]);
     }
