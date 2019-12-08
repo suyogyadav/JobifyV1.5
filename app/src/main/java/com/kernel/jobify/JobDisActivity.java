@@ -18,6 +18,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+
 import java.io.InputStream;
 
 public class JobDisActivity extends AppCompatActivity {
@@ -29,12 +33,22 @@ public class JobDisActivity extends AppCompatActivity {
     TextView title;
     TextView disc;
     ImageView img;
+    boolean flag = false;
+    private InterstitialAd interstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        AdRequest adRequest = new AdRequest.Builder().build();
+        interstitialAd.loadAd(adRequest);
+
+        ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
+
+        Log.i("jobcheck","oncreate");
 
 
         if (info!= null && info.isConnected()) {
@@ -65,7 +79,7 @@ public class JobDisActivity extends AppCompatActivity {
                         .execute(showdata.jobPhotoLink);
             }
             title.setText(showdata.getJobTitle());
-            disc.setText(showdata.getJobDisc().replace("   ", "\n"));
+            disc.setText(showdata.getJobDisc().replace("_n", "\n"));
             disc.setMovementMethod(new ScrollingMovementMethod());
         }
         else
@@ -81,6 +95,20 @@ public class JobDisActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.i("jobcheck","onRestart");
+        if (interstitialAd.isLoaded())
+        {
+            interstitialAd.show();
+            Log.i("jobcheck", "ad shows");
+        }
+        else {
+            Log.i("jobcheck", "ad is not loaded yet");
+        }
+        super.onRestart();
     }
 
     public void openbowser(View view)

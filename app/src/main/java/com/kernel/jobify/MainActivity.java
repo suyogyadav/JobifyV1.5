@@ -118,6 +118,10 @@ public class MainActivity extends AppCompatActivity
             RecyclerView res = findViewById(R.id.catresview);
             res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
             res.setAdapter(new CatAdapter(getBaseContext()));
+
+            AdView adView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
         }
     }
     public void runthread(final String abcd)
