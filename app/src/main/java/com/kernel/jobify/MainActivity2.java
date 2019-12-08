@@ -10,12 +10,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +35,8 @@ import java.util.List;
 public class MainActivity2 extends AppCompatActivity {
 
     DatabaseReference databaseRef;
-    List<JobData> jobslist;
+    List<Object> jobslist;
+    List<Object> adlist;
     Context context;
 
     @Override
@@ -37,6 +44,8 @@ public class MainActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         context = this;
+
+        MobileAds.initialize(this,"ca-app-pub-3940256099942544~3347511713");
 
         ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
@@ -57,6 +66,7 @@ public class MainActivity2 extends AppCompatActivity {
 
 
             jobslist = new ArrayList<>();
+
             retrivedata(getIntent().getStringExtra("CAT"));
         }
         else
@@ -75,6 +85,8 @@ public class MainActivity2 extends AppCompatActivity {
 
     }
 
+
+
     public void retrivedata(String CAT)
     {
         databaseRef = FirebaseDatabase.getInstance().getReference(CAT);
@@ -85,7 +97,7 @@ public class MainActivity2 extends AppCompatActivity {
 
                 jobslist.clear(); /// remember remove this.
 
-                if(dataSnapshot.getChildrenCount()==1)
+                if(dataSnapshot.getChildrenCount()==0)
                 {
                     Toast.makeText(context,"Sorry No Jobs Avilable At Time",Toast.LENGTH_SHORT).show();
                 }
@@ -96,12 +108,12 @@ public class MainActivity2 extends AppCompatActivity {
                         jobslist.add(jobData);
 
                         Log.i("ABCD", "" + dataSnapshot1.getKey());
-                        Log.i("ABCD", "" + jobData.getJobTitle() + "" + jobslist.size());
+                        Log.i("ABCD", "" + jobData.getJobTitle());
                     }
-                    Log.i("ABCD", "" + jobslist.size());
 
                     Collections.reverse(jobslist);
-
+                    jobslist = getbannerad(jobslist);
+                    jobslist = loadads(jobslist);
                     RecyclerView res = findViewById(R.id.rscview);
                     res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
                     res.setAdapter(new NewsAdapter(jobslist,getBaseContext()));
@@ -116,5 +128,32 @@ public class MainActivity2 extends AppCompatActivity {
 
     }
 
+    public List<Object> getbannerad(List<Object> jobslist)
+    {
+        for (int i =1;i<jobslist.size();i=i+3)
+        {
+            final AdView adView = new AdView(this);
+            adView.setAdSize(new AdSize(300,250));
+            adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+            Log.i("ABCD","AD IS GETTING PLACED"+i);
+            jobslist.add(i,adView);
+        }
+        return jobslist;
+    }
+
+    public List<Object> loadads(List<Object> jobslist)
+    {
+        for (int i=0;i<jobslist.size();i++)
+        {
+            Object item = jobslist.get(i);
+
+            if (item instanceof AdView)
+            {
+                final AdView adView = (AdView) item;
+                adView.loadAd(new AdRequest.Builder().build());
+            }
+        }
+        return jobslist;
+    }
 }
 

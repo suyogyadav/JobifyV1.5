@@ -16,15 +16,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import com.google.android.gms.ads.AdView;
+
 import java.io.InputStream;
 import java.util.List;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.newsviewholder>
+public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    List<JobData> jobslist;
+    List<Object> jobslist;
     Context ctx;
+    private static  final int ITEAM_JOB=0;
+    private static  final int ITEAM_BANNER_AD=1;
+    boolean flag = true;
 
-    public NewsAdapter(List<JobData> jobslist, Context ctx)
+    public NewsAdapter(List<Object> jobslist,Context ctx)
     {
         this.jobslist = jobslist;
         this.ctx = ctx;
@@ -32,22 +37,58 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.newsviewholder
 
     @NonNull
     @Override
-    public newsviewholder onCreateViewHolder(ViewGroup viewGroup, int i)
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
     {
+        switch (getItemViewType(i))
+        {
+            case ITEAM_JOB:
+                LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+                View view = inflater.inflate(R.layout.news_space,viewGroup,false);
+                return new newsviewholder(view,ctx);
 
-        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View view = inflater.inflate(R.layout.news_space,viewGroup,false);
-        return new newsviewholder(view,ctx);
+            case ITEAM_BANNER_AD:
+
+                default:
+                    LayoutInflater inflater1 = LayoutInflater.from(viewGroup.getContext());
+                    View view1 = inflater1.inflate(R.layout.adcardview,viewGroup,false);
+                    return new Adviewolder(view1);
+        }
     }
 
     @Override
-    public void onBindViewHolder(newsviewholder viewHolder, int i)
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i)
     {
-        if (jobslist.get(i).getJobPhotoLink()!=null) {
-            new DownloadImageTask(viewHolder.imgicon,viewHolder.progressBar)
-                    .execute(jobslist.get(i).getJobPhotoLink());
+        Log.i("ABCD","Position"+i);
+        switch (getItemViewType(i))
+        {
+            case ITEAM_JOB:
+                newsviewholder newsviewholder = (newsviewholder) viewHolder;
+                JobData jobData =(JobData) jobslist.get(i);
+                if (jobData.getJobPhotoLink()!=null) {
+                    new DownloadImageTask(newsviewholder.imgicon,newsviewholder.progressBar)
+                            .execute(jobData.getJobPhotoLink());
+                }
+                newsviewholder.title.setText( jobData.getJobTitle());
+                break;
+
+            case ITEAM_BANNER_AD:
+                default:
+                    Adviewolder adviewolder = (Adviewolder) viewHolder;
+                    AdView adView = (AdView) jobslist.get(i);
+                    Log.i("ABCD","ADCASTDONEON "+i);
+                    ViewGroup adcardview = (ViewGroup) adviewolder.itemView;
+
+                    if (adcardview.getChildCount()>0)
+                    {
+                        adcardview.removeAllViews();
+                    }
+                    if (adcardview.getParent()!=null)
+                    {
+                        ((ViewGroup)adView.getParent()).removeView(adView);
+                    }
+                    adcardview.addView(adView);
+                    break;
         }
-        viewHolder.title.setText( jobslist.get(i).getJobTitle());
     }
 
     @Override
@@ -55,6 +96,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.newsviewholder
         return jobslist.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (jobslist.get(position)instanceof AdView)
+        {
+            return ITEAM_BANNER_AD;
+        }
+        else
+        {
+                return ITEAM_JOB;
+        }
+    }
 
     public class newsviewholder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
@@ -76,9 +128,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.newsviewholder
         public void onClick(View v) {
             int pos = getAdapterPosition();
             Intent intent = new Intent(ctx,JobDisActivity.class);
-            intent.putExtra("jobdata",jobslist.get(pos));
+            intent.putExtra("jobdata",(JobData)jobslist.get(pos));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             ctx.startActivity(intent);
+        }
+    }
+
+    public class Adviewolder extends RecyclerView.ViewHolder
+    {
+
+        public Adviewolder(@NonNull View itemView) {
+            super(itemView);
         }
     }
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
