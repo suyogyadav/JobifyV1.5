@@ -6,6 +6,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Handler;
 import androidx.annotation.NonNull;
@@ -15,6 +23,8 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -38,7 +48,8 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences catcount;
     int temp;
     int fori;
-
+    int[][] catlogo = {{R.drawable.catlogo01,R.drawable.catlogo02},{R.drawable.catlogo03,R.drawable.catlogo04},{R.drawable.catlogo05,R.drawable.catlogo06}};
+    String[][] showlist =  {{"IT","Electronics"},{"Mechanical","Civil"},{"Government","Internship"}};
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -77,10 +88,24 @@ public class MainActivity extends AppCompatActivity
                     }
                     else {
                         setContentView(R.layout.maincatlayout);
-
+/*
                         RecyclerView res = findViewById(R.id.catresview);
                         res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
                         res.setAdapter(new CatAdapter(getBaseContext()));
+*/
+                        int imageView[][] = {{R.id.catimg1,R.id.catimg2},{R.id.catimg3,R.id.catimg4},{R.id.catimg5,R.id.catimg6}};
+                        int textview[][] = {{R.id.catname1,R.id.catname2},{R.id.catname3,R.id.catname4},{R.id.catname5,R.id.catname6}};
+                        for (int i=0;i<3;i++)
+                        {
+                            ImageView imageView1 = findViewById(imageView[i][0]);
+                            ImageView imageView2 = findViewById(imageView[i][1]);
+                            imageView1.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(),catlogo[i][0])));
+                            imageView2.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(),catlogo[i][1])));
+                            TextView textView1 = findViewById(textview[i][0]);
+                            TextView textView2 = findViewById(textview[i][1]);
+                            textView1.setText(showlist[i][0]);
+                            textView2.setText(showlist[i][1]);
+                        }
 
                         AdView adView = findViewById(R.id.adView);
                         AdRequest adRequest = new AdRequest.Builder().build();
@@ -115,10 +140,11 @@ public class MainActivity extends AppCompatActivity
             }
             editor.commit();
             setContentView(R.layout.maincatlayout);
-            RecyclerView res = findViewById(R.id.catresview);
+
+            /*RecyclerView res = findViewById(R.id.catresview);
             res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
             res.setAdapter(new CatAdapter(getBaseContext()));
-
+*/
             AdView adView = findViewById(R.id.adView);
             AdRequest adRequest = new AdRequest.Builder().build();
             adView.loadAd(adRequest);
@@ -191,6 +217,27 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = 12;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
 
     public void scheduleJob()
     {

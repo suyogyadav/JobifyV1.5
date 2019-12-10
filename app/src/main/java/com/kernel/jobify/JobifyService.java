@@ -20,6 +20,8 @@ import androidx.annotation.NonNull;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+
 import android.util.Log;
 
 
@@ -37,6 +39,8 @@ public class JobifyService extends JobService {
 
     int ct;
     int newchildcount;
+
+
 
     public static boolean isrunning;
     List<JobData> jobslist;
@@ -72,23 +76,24 @@ public class JobifyService extends JobService {
             }
      }
 
-    public void shownotification(String title,String disc,String link,String photolink,int id)
+    public void shownotification(final String title,final String disc,final String link,final String photolink,final int id)
     {
         Log.i("newtest","shownotifcation called");
         Log.i("newtest",title);
         createchannel(title);
-        JobData jobData = new JobData();
-        jobData.setJobTitle(title);
-        jobData.setJobDisc(disc);
-        jobData.setJobLink(link);
-        jobData.setJobPhotoLink(photolink);
+        final JobData newjob = new JobData();
+        newjob.setJobTitle(title);
+        newjob.setJobDisc(disc);
+        newjob.setJobLink(link);
+        newjob.setJobPhotoLink(photolink);
         Intent intent = new Intent(this,JobDisActivity.class);
-        intent.putExtra("jobdata",jobData);
+        intent.putExtra("jobTitle",newjob.getJobTitle());
+        intent.putExtra("jobDisc",newjob.getJobDisc());
+        intent.putExtra("jobLink",newjob.getJobLink());
+        intent.putExtra("jobPhoto",newjob.getJobPhotoLink());
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntent(intent);
-
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
-
+        PendingIntent pendingIntent =stackBuilder.getPendingIntent(id,PendingIntent.FLAG_UPDATE_CURRENT);//PendingIntent.getActivity(getApplicationContext(),id,intent,PendingIntent.FLAG_UPDATE_CURRENT,extras);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "notification")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentIntent(pendingIntent)
@@ -96,8 +101,9 @@ public class JobifyService extends JobService {
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(id, builder.build());
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(id, builder.build());
     }
 
     public void createchannel(String title)
@@ -110,7 +116,6 @@ public class JobifyService extends JobService {
             notificationManager.createNotificationChannel(notificationChannel);
             Log.i("newtest","notifcation channel created for "+title);
         }
-
     }
 
     public void getntification(String cat1)
@@ -132,7 +137,7 @@ public class JobifyService extends JobService {
                         Log.i("TYUI", "old pointer " + oldpointer);
                         Log.i("TYUI", "old count " + oldcount);
                         Log.i("TYUI", "new child count " + newchildcount);
-
+                        List<JobData> jobDataList = new ArrayList<JobData>();
                         if (newchildcount > oldcount) {
                             Log.i("TYUI", "New child count is greater than oldcount");
                             for (int i = oldpointer+1; i < newchildcount; i++) {
@@ -141,11 +146,18 @@ public class JobifyService extends JobService {
                                 str = String.format("%03d", Integer.parseInt(str));
                                 Log.i("ERTY", str);
                                 JobData jobData = dataSnapshot.child("job" + str).getValue(JobData.class);
-                                shownotification(jobData.getJobTitle(),jobData.getJobDisc(),jobData.getJobLink(),jobData.getJobPhotoLink(), ct++);
+                                jobDataList.add(jobData);
                             }
                             oldcount1.edit().putInt(cat, newchildcount).commit();
                             Log.i("TYUI",""+oldcount1.getInt(cat,0));
                             oldpointer1.edit().putInt(cat, newchildcount-1).commit();
+                        }
+                        if (jobDataList.size()!=0)
+                        {
+                            for (int i=0;i<jobDataList.size();i++)
+                            {
+                                shownotification(jobDataList.get(i).getJobTitle(),jobDataList.get(i).getJobDisc(),jobDataList.get(i).getJobLink(),jobDataList.get(i).getJobPhotoLink(), ct++);
+                            }
                         }
                     }
 

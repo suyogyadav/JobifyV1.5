@@ -1,63 +1,322 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<RelativeLayout
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity2"
+    tools:context=".MainActivity"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbarmainlay"
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="164dp"
-        android:background="@color/colorPrimary"
-        >
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:elevation="0dp"
-            app:title="@string/app_name"
-            android:paddingStart="50dp"
-            android:paddingEnd="70dp"
-            app:collapsedTitleGravity="center_horizontal"
-            app:expandedTitleGravity="center"
-            app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/newstoolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:layout_collapseMode="pin" />
+            <TextView
+                android:layout_gravity="center"
+                android:text="@string/app_name"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/appbarmainlay"
-        android:elevation="6dp"
-        android:id="@+id/catresview"
-        android:paddingBottom="50dp"
-        android:clipToPadding="false"
-        android:nestedScrollingEnabled="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    <LinearLayout
+        android:id="@+id/lay4"
+        android:layout_below="@id/appbar"
+        android:orientation="vertical"
+        android:weightSum="9"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
 
-    <com.google.android.gms.ads.AdView
-        android:nestedScrollingEnabled="true"
-        android:layout_gravity="center_horizontal|bottom"
-        android:elevation="8dp"
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:adSize="BANNER"
-        app:adUnitId="ca-app-pub-3940256099942544/6300978111">
-    </com.google.android.gms.ads.AdView>
+        <LinearLayout
+            android:id="@+id/lay1"
+            android:layout_below="@id/appbar"
+            android:weightSum="10"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <FrameLayout
+                android:id="@+id/frame1"
+                android:elevation="6dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/rounded_shape"
+                android:layout_weight="5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:onClick="btnIT">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_centerInParent="true"
+                        android:id="@+id/catimg1"
+                        app:srcCompat="@drawable/catlogo01"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/rounded_shape"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:id="@+id/catname1"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/app_name"
+                        android:layout_marginTop="125dp"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:onClick="btnECS"
+                android:layout_margin="10dp"
+                android:id="@+id/frame2"
+                android:elevation="6dp"
+                android:background="@drawable/rounded_shape"
+                android:layout_weight="5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/catimg2"
+                        android:layout_centerInParent="true"
+                        app:srcCompat="@drawable/catlogo02"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:id="@+id/catname2"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/app_name"
+                        android:layout_marginTop="125dp"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lay2"
+            android:layout_below="@id/lay1"
+            android:weightSum="10"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+
+            <FrameLayout
+                android:id="@+id/frame3"
+                android:elevation="6dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/rounded_shape"
+                android:layout_weight="5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:onClick="btnMECH">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_centerInParent="true"
+                        android:id="@+id/catimg3"
+                        app:srcCompat="@drawable/catlogo03"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/rounded_shape"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:id="@+id/catname3"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/app_name"
+                        android:layout_marginTop="125dp"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+            </FrameLayout>
+
+            <FrameLayout
+
+                android:layout_margin="10dp"
+                android:id="@+id/frame4"
+                android:elevation="6dp"
+                android:background="@drawable/rounded_shape"
+                android:layout_weight="5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:onClick="btnCIVIL">
+
+                <RelativeLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/catimg4"
+                        android:layout_centerInParent="true"
+                        app:srcCompat="@drawable/catlogo04"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:id="@+id/catname4"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/app_name"
+                        android:layout_marginTop="125dp"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lay3"
+            android:weightSum="10"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+
+            <FrameLayout
+                android:id="@+id/frame5"
+                android:elevation="6dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/rounded_shape"
+                android:layout_weight="5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:onClick="btnGOVT">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_centerInParent="true"
+                        android:id="@+id/catimg5"
+                        app:srcCompat="@drawable/catlogo05"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/rounded_shape"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:id="@+id/catname5"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/app_name"
+                        android:layout_marginTop="125dp"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+            </FrameLayout>
+
+            <FrameLayout
+
+                android:layout_margin="10dp"
+                android:id="@+id/frame6"
+                android:elevation="6dp"
+                android:background="@drawable/rounded_shape"
+                android:layout_weight="5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:onClick="btnINTERN">
+
+                <RelativeLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/catimg6"
+                        android:layout_centerInParent="true"
+                        app:srcCompat="@drawable/catlogo06"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:id="@+id/catname6"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/app_name"
+                        android:layout_marginTop="125dp"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <com.google.android.gms.ads.AdView
+            android:layout_below="@id/lay4"
+            android:layout_gravity="bottom|center"
+            android:nestedScrollingEnabled="true"
+            android:elevation="8dp"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:adSize="BANNER"
+            app:adUnitId="ca-app-pub-3940256099942544/6300978111"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

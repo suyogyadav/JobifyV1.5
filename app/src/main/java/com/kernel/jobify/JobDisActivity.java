@@ -6,10 +6,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -26,15 +30,15 @@ import java.io.InputStream;
 
 public class JobDisActivity extends AppCompatActivity {
 
-
     JobData showdata;
     ProgressBar progressBar;
     Button apply;
     TextView title;
     TextView disc;
     ImageView img;
-    boolean flag = false;
+
     private InterstitialAd interstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,12 +52,12 @@ public class JobDisActivity extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
 
-        Log.i("jobcheck","oncreate");
+        Log.i("jobcheck", "oncreate");
 
 
-        if (info!= null && info.isConnected()) {
+        if (info != null && info.isConnected()) {
             setContentView(R.layout.activity_jobdis);
-
+            showdata = new JobData();
             Toolbar toolbar = findViewById(R.id.jobdistoolbar);
             toolbar.setNavigationIcon(R.drawable.ic_action_back);
 
@@ -64,8 +68,11 @@ public class JobDisActivity extends AppCompatActivity {
                 }
             });
 
-            showdata = (JobData) getIntent().getSerializableExtra("jobdata");
-
+            JobData showdata1 = new JobData();
+            showdata1.setJobTitle(getIntent().getStringExtra("jobTitle"));
+            showdata1.setJobDisc(getIntent().getStringExtra("jobDisc"));
+            showdata1.setJobLink(getIntent().getStringExtra("jobLink"));
+            showdata1.setJobPhotoLink(getIntent().getStringExtra("jobPhotoLink"));
             progressBar = findViewById(R.id.progressbar);
             progressBar.setVisibility(View.VISIBLE);
 
@@ -74,16 +81,18 @@ public class JobDisActivity extends AppCompatActivity {
             title = findViewById(R.id.jobdistitle);
             img = findViewById(R.id.jobdisimg);
 
-            if (showdata.getJobPhotoLink() != null) {
+            if (showdata1.getJobPhotoLink() != null) {
                 new DownloadImageTask(img)
-                        .execute(showdata.jobPhotoLink);
+                        .execute(showdata1.jobPhotoLink);
+            } else {
+                img.setImageResource(R.mipmap.ic_launcher);
+                progressBar.setVisibility(View.GONE);
             }
-            title.setText(showdata.getJobTitle());
-            disc.setText(showdata.getJobDisc().replace("_n", "\n"));
+            title.setText(showdata1.getJobTitle());
+            disc.setText(showdata1.getJobDisc().replace("_n", "\n"));
             disc.setMovementMethod(new ScrollingMovementMethod());
-        }
-        else
-        {
+            showdata = showdata1;
+        } else {
             setContentView(R.layout.blnt);
             Toolbar toolbar = findViewById(R.id.blnttoolbar);
             toolbar.setNavigationIcon(R.drawable.ic_action_back);
@@ -99,20 +108,17 @@ public class JobDisActivity extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        Log.i("jobcheck","onRestart");
-        if (interstitialAd.isLoaded())
-        {
+        Log.i("jobcheck", "onRestart");
+        if (interstitialAd.isLoaded()) {
             interstitialAd.show();
             Log.i("jobcheck", "ad shows");
-        }
-        else {
+        } else {
             Log.i("jobcheck", "ad is not loaded yet");
         }
         super.onRestart();
     }
 
-    public void openbowser(View view)
-    {
+    public void openbowser(View view) {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
         builder.setToolbarColor(getResources().getColor(R.color.colorPrimary));
         builder.addDefaultShareMenuItem();

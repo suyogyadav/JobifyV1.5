@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -127,8 +129,12 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         @Override
         public void onClick(View v) {
             int pos = getAdapterPosition();
+            JobData newjob =(JobData)jobslist.get(pos);
             Intent intent = new Intent(ctx,JobDisActivity.class);
-            intent.putExtra("jobdata",(JobData)jobslist.get(pos));
+            intent.putExtra("jobTitle",newjob.getJobTitle());
+            intent.putExtra("jobDisc",newjob.getJobDisc());
+            intent.putExtra("jobLink",newjob.getJobLink());
+            intent.putExtra("jobPhoto",newjob.getJobPhotoLink());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             ctx.startActivity(intent);
         }
