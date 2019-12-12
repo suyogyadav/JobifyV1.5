@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -45,7 +46,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         context = this;
 
-        MobileAds.initialize(this,"ca-app-pub-3940256099942544~3347511713");
+        MobileAds.initialize(this,"ca-app-pub-3335585827854611~4200408157");
 
         ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
@@ -134,12 +135,13 @@ public class MainActivity2 extends AppCompatActivity {
         {
             final AdView adView = new AdView(this);
             adView.setAdSize(new AdSize(300,250));
-            adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+            adView.setAdUnitId("ca-app-pub-3335585827854611/5421974575");
             Log.i("ABCD","AD IS GETTING PLACED"+i);
             jobslist.add(i,adView);
         }
         return jobslist;
     }
+
 
     public List<Object> loadads(List<Object> jobslist)
     {
@@ -155,5 +157,7 @@ public class MainActivity2 extends AppCompatActivity {
         }
         return jobslist;
     }
+
+
 }
 

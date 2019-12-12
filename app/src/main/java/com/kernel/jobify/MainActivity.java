@@ -16,11 +16,15 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,10 +40,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
-{
+public class MainActivity extends AppCompatActivity {
 
     Context context;
     boolean firstTime;
@@ -48,20 +53,20 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences catcount;
     int temp;
     int fori;
-    int[][] catlogo = {{R.drawable.catlogo01,R.drawable.catlogo02},{R.drawable.catlogo03,R.drawable.catlogo04},{R.drawable.catlogo05,R.drawable.catlogo06}};
-    String[][] showlist =  {{"IT","Electronics"},{"Mechanical","Civil"},{"Government","Internship"}};
+    int[] catlogo = {R.drawable.catlogo01, R.drawable.catlogo02, R.drawable.catlogo03, R.drawable.catlogo04, R.drawable.catlogo05, R.drawable.catlogo06};
+    String[] showlist = {"IT", "Electronics", "Mechanical", "Civil", "Government", "Internship"};
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         scheduleJob();
-        MobileAds.initialize(this,"ca-app-pub-3940256099942544~3347511713");
+        MobileAds.initialize(this, "ca-app-pub-3335585827854611~4200408157");
 
         settings = this.getSharedPreferences("appInfo", 0);
         firstTime = settings.getBoolean("first_time", true);
-        catcount = getSharedPreferences("catcount",0);
+        catcount = getSharedPreferences("catcount", 0);
         context = this;
 
         Handler handler = new Handler();
@@ -77,35 +82,40 @@ public class MainActivity extends AppCompatActivity
                     RecyclerView res = findViewById(R.id.preflist);
                     res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
                     res.setAdapter(new ListAdapterPref(getBaseContext()));
-                }
-                else {
-                    if (catcount.getInt("count",0)==0)
-                    {
+                } else {
+                    if (catcount.getInt("count", 0) == 0) {
                         setContentView(R.layout.preference_layout);
                         RecyclerView res = findViewById(R.id.preflist);
                         res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
                         res.setAdapter(new ListAdapterPref(getBaseContext()));
-                    }
-                    else {
+                    } else {
                         setContentView(R.layout.maincatlayout);
-/*
-                        RecyclerView res = findViewById(R.id.catresview);
-                        res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
-                        res.setAdapter(new CatAdapter(getBaseContext()));
-*/
-                        int imageView[][] = {{R.id.catimg1,R.id.catimg2},{R.id.catimg3,R.id.catimg4},{R.id.catimg5,R.id.catimg6}};
-                        int textview[][] = {{R.id.catname1,R.id.catname2},{R.id.catname3,R.id.catname4},{R.id.catname5,R.id.catname6}};
-                        for (int i=0;i<3;i++)
-                        {
-                            ImageView imageView1 = findViewById(imageView[i][0]);
-                            ImageView imageView2 = findViewById(imageView[i][1]);
-                            imageView1.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(),catlogo[i][0])));
-                            imageView2.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(),catlogo[i][1])));
-                            TextView textView1 = findViewById(textview[i][0]);
-                            TextView textView2 = findViewById(textview[i][1]);
-                            textView1.setText(showlist[i][0]);
-                            textView2.setText(showlist[i][1]);
-                        }
+
+                        ImageView imageView1 = findViewById(R.id.catimg1);
+                        imageView1.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[0])));
+                        ImageView imageView2 = findViewById(R.id.catimg2);
+                        imageView2.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[1])));
+                        ImageView imageView3 = findViewById(R.id.catimg3);
+                        imageView3.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[2])));
+                        ImageView imageView4 = findViewById(R.id.catimg4);
+                        imageView4.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[3])));
+                        ImageView imageView5 = findViewById(R.id.catimg5);
+                        imageView5.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[4])));
+                        ImageView imageView6 = findViewById(R.id.catimg6);
+                        imageView6.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[5])));
+
+                        TextView textView1 = findViewById(R.id.catname1);
+                        textView1.setText(showlist[0]);
+                        TextView textView2 = findViewById(R.id.catname2);
+                        textView2.setText(showlist[1]);
+                        TextView textView3 = findViewById(R.id.catname3);
+                        textView3.setText(showlist[2]);
+                        TextView textView4 = findViewById(R.id.catname4);
+                        textView4.setText(showlist[3]);
+                        TextView textView5 = findViewById(R.id.catname5);
+                        textView5.setText(showlist[4]);
+                        TextView textView6 = findViewById(R.id.catname6);
+                        textView6.setText(showlist[5]);
 
                         AdView adView = findViewById(R.id.adView);
                         AdRequest adRequest = new AdRequest.Builder().build();
@@ -113,24 +123,21 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
 
-                Log.i("poiu","activity sleeping");
+                Log.i("poiu", "activity sleeping");
             }
         }, 3000);
 
     }
 
-    public void PrefSubmit(View view)
-    {
-        catpref = this.getSharedPreferences("catpref",0);
-        catcount = this.getSharedPreferences("catcount",0);
+    public void PrefSubmit(View view) {
+        catpref = this.getSharedPreferences("catpref", 0);
+        catcount = this.getSharedPreferences("catcount", 0);
         SharedPreferences.Editor editor = catpref.edit();
         SharedPreferences.Editor editor1 = catcount.edit();
         final ArrayList<String> lst = ListAdapterPref.msg();
-        if (lst.size()==0)
-        {
-            Toast.makeText(this,"Please Select At Least One Preference",Toast.LENGTH_SHORT).show();
-        }
-        else {
+        if (lst.size() == 0) {
+            Toast.makeText(this, "Please Select At Least One Preference", Toast.LENGTH_SHORT).show();
+        } else {
             editor1.putInt("count", lst.size());
             editor1.commit();
             for (fori = 0; fori < lst.size(); fori++) {
@@ -141,19 +148,41 @@ public class MainActivity extends AppCompatActivity
             editor.commit();
             setContentView(R.layout.maincatlayout);
 
-            /*RecyclerView res = findViewById(R.id.catresview);
-            res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
-            res.setAdapter(new CatAdapter(getBaseContext()));
-*/
+            ImageView imageView1 = findViewById(R.id.catimg1);
+            imageView1.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[0])));
+            ImageView imageView2 = findViewById(R.id.catimg2);
+            imageView2.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[1])));
+            ImageView imageView3 = findViewById(R.id.catimg3);
+            imageView3.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[2])));
+            ImageView imageView4 = findViewById(R.id.catimg4);
+            imageView4.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[3])));
+            ImageView imageView5 = findViewById(R.id.catimg5);
+            imageView5.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[4])));
+            ImageView imageView6 = findViewById(R.id.catimg6);
+            imageView6.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[5])));
+
+            TextView textView1 = findViewById(R.id.catname1);
+            textView1.setText(showlist[0]);
+            TextView textView2 = findViewById(R.id.catname2);
+            textView2.setText(showlist[1]);
+            TextView textView3 = findViewById(R.id.catname3);
+            textView3.setText(showlist[2]);
+            TextView textView4 = findViewById(R.id.catname4);
+            textView4.setText(showlist[3]);
+            TextView textView5 = findViewById(R.id.catname5);
+            textView5.setText(showlist[4]);
+            TextView textView6 = findViewById(R.id.catname6);
+            textView6.setText(showlist[5]);
+
             AdView adView = findViewById(R.id.adView);
             AdRequest adRequest = new AdRequest.Builder().build();
             adView.loadAd(adRequest);
         }
     }
-    public void runthread(final String abcd)
-    {
-        final SharedPreferences oldcount1 = this.getSharedPreferences("oldcount",0);
-        final SharedPreferences oldpointer1 = this.getSharedPreferences("oldpointer",0);
+
+    public void runthread(final String abcd) {
+        final SharedPreferences oldcount1 = this.getSharedPreferences("oldcount", 0);
+        final SharedPreferences oldpointer1 = this.getSharedPreferences("oldpointer", 0);
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -161,10 +190,10 @@ public class MainActivity extends AppCompatActivity
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        int count =(int) dataSnapshot.getChildrenCount();
-                        oldcount1.edit().putInt(abcd,count).commit();
-                        oldpointer1.edit().putInt(abcd,count-1).commit();
-                        Log.i("ERTY",abcd+"put shared pref called");
+                        int count = (int) dataSnapshot.getChildrenCount();
+                        oldcount1.edit().putInt(abcd, count).commit();
+                        oldpointer1.edit().putInt(abcd, count - 1).commit();
+                        Log.i("ERTY", abcd + "put shared pref called");
                     }
 
                     @Override
@@ -176,44 +205,39 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void btnIT(View view)
-    {
-        Intent intent = new Intent(this,MainActivity2.class);
-        intent.putExtra("CAT","IT");
-        startActivity(intent);
-    }
-    public void btnECS(View view)
-    {
-        Intent intent = new Intent(this,MainActivity2.class);
-        intent.putExtra("CAT","ECS");
+    public void btnIT(View view) {
+        Intent intent = new Intent(this, MainActivity2.class);
+        intent.putExtra("CAT", "IT");
         startActivity(intent);
     }
 
-    public void btnMECH(View view)
-    {
-        Intent intent = new Intent(this,MainActivity2.class);
-        intent.putExtra("CAT","MECH");
+    public void btnECS(View view) {
+        Intent intent = new Intent(this, MainActivity2.class);
+        intent.putExtra("CAT", "ECS");
         startActivity(intent);
     }
 
-    public void btnCIVIL(View view)
-    {
-        Intent intent = new Intent(this,MainActivity2.class);
-        intent.putExtra("CAT","CIVIL");
+    public void btnMECH(View view) {
+        Intent intent = new Intent(this, MainActivity2.class);
+        intent.putExtra("CAT", "MECH");
         startActivity(intent);
     }
 
-    public void btnGOVT(View view)
-    {
-        Intent intent = new Intent(this,MainActivity2.class);
-        intent.putExtra("CAT","GOVT");
+    public void btnCIVIL(View view) {
+        Intent intent = new Intent(this, MainActivity2.class);
+        intent.putExtra("CAT", "CIVIL");
         startActivity(intent);
     }
 
-    public void btnINTERN(View view)
-    {
-        Intent intent = new Intent(this,MainActivity2.class);
-        intent.putExtra("CAT","INTERN");
+    public void btnGOVT(View view) {
+        Intent intent = new Intent(this, MainActivity2.class);
+        intent.putExtra("CAT", "GOVT");
+        startActivity(intent);
+    }
+
+    public void btnINTERN(View view) {
+        Intent intent = new Intent(this, MainActivity2.class);
+        intent.putExtra("CAT", "INTERN");
         startActivity(intent);
     }
 
@@ -239,9 +263,8 @@ public class MainActivity extends AppCompatActivity
         return output;
     }
 
-    public void scheduleJob()
-    {
-        JobInfo myjob = new JobInfo.Builder(0,new ComponentName(this,JobifyService.class))
+    public void scheduleJob() {
+        JobInfo myjob = new JobInfo.Builder(0, new ComponentName(this, JobifyService.class))
                 .setPeriodic(900000)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)

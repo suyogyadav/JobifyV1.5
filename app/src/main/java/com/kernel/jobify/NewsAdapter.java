@@ -69,6 +69,10 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 if (jobData.getJobPhotoLink()!=null) {
                     new DownloadImageTask(newsviewholder.imgicon,newsviewholder.progressBar)
                             .execute(jobData.getJobPhotoLink());
+                }else
+                {
+                    newsviewholder.imgicon.setImageResource(R.mipmap.ic_launcher);
+                    newsviewholder.progressBar.setVisibility(View.GONE);
                 }
                 newsviewholder.title.setText( jobData.getJobTitle());
                 break;
@@ -134,7 +138,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             intent.putExtra("jobTitle",newjob.getJobTitle());
             intent.putExtra("jobDisc",newjob.getJobDisc());
             intent.putExtra("jobLink",newjob.getJobLink());
-            intent.putExtra("jobPhoto",newjob.getJobPhotoLink());
+            intent.putExtra("jobPhotoLink",newjob.getJobPhotoLink());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             ctx.startActivity(intent);
         }
@@ -147,6 +151,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             super(itemView);
         }
     }
+
+
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
         ProgressBar progressBar;

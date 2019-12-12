@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -43,9 +44,9 @@ public class JobDisActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        MobileAds.initialize(this, "ca-app-pub-3335585827854611~4200408157");
         interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        interstitialAd.setAdUnitId("ca-app-pub-3335585827854611/3178954615");
         AdRequest adRequest = new AdRequest.Builder().build();
         interstitialAd.loadAd(adRequest);
 
@@ -74,23 +75,23 @@ public class JobDisActivity extends AppCompatActivity {
             showdata1.setJobLink(getIntent().getStringExtra("jobLink"));
             showdata1.setJobPhotoLink(getIntent().getStringExtra("jobPhotoLink"));
             progressBar = findViewById(R.id.progressbar);
-            progressBar.setVisibility(View.VISIBLE);
-
             apply = findViewById(R.id.jobdisbtn);
             disc = findViewById(R.id.jobdisdis);
             title = findViewById(R.id.jobdistitle);
             img = findViewById(R.id.jobdisimg);
 
-            if (showdata1.getJobPhotoLink() != null) {
-                new DownloadImageTask(img)
-                        .execute(showdata1.jobPhotoLink);
-            } else {
+            if (showdata1.getJobPhotoLink()!= null) {
+                new DownloadImageTask(img,progressBar)
+                        .execute(showdata1.getJobPhotoLink());
+            }
+            else
+            {
                 img.setImageResource(R.mipmap.ic_launcher);
                 progressBar.setVisibility(View.GONE);
             }
             title.setText(showdata1.getJobTitle());
             disc.setText(showdata1.getJobDisc().replace("_n", "\n"));
-            disc.setMovementMethod(new ScrollingMovementMethod());
+            //disc.setMovementMethod(new ScrollingMovementMethod());
             showdata = showdata1;
         } else {
             setContentView(R.layout.blnt);
@@ -119,20 +120,35 @@ public class JobDisActivity extends AppCompatActivity {
     }
 
     public void openbowser(View view) {
-        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-        builder.setToolbarColor(getResources().getColor(R.color.colorPrimary));
-        builder.addDefaultShareMenuItem();
-        builder.setShowTitle(true);
 
-        CustomTabsIntent customTabsIntent = builder.build();
-        customTabsIntent.launchUrl(this, Uri.parse(showdata.jobLink));
+        if (showdata.getJobLink()!=null) {
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            builder.setToolbarColor(getResources().getColor(R.color.colorPrimary));
+            builder.addDefaultShareMenuItem();
+            builder.setShowTitle(true);
+
+            CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.launchUrl(this, Uri.parse(showdata.getJobLink()));
+        }
+        else
+        {
+            Toast.makeText(this,"No Apply Link Avilable",Toast.LENGTH_SHORT).show();
+        }
 
     }
 
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
+        ProgressBar progressBar;
 
-        public DownloadImageTask(ImageView bmImage) {
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        public DownloadImageTask(ImageView bmImage,ProgressBar progressBar) {
+            this.progressBar = progressBar;
             this.bmImage = bmImage;
         }
 
@@ -149,7 +165,7 @@ public class JobDisActivity extends AppCompatActivity {
             return mIcon11;
         }
 
-        protected void onPostExecute(Bitmap result) {
+        protected void onPostExecute(Bitmap result){
             progressBar.setVisibility(View.GONE);
             bmImage.setImageBitmap(result);
         }
