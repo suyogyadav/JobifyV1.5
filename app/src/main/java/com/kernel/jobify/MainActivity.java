@@ -39,8 +39,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences settings;
     SharedPreferences catpref;
     SharedPreferences catcount;
-    int temp;
     int fori;
     int[] catlogo = {R.drawable.catlogo01, R.drawable.catlogo02, R.drawable.catlogo03, R.drawable.catlogo04, R.drawable.catlogo05, R.drawable.catlogo06};
     String[] showlist = {"IT", "Electronics", "Mechanical", "Civil", "Government", "Internship"};
@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         scheduleJob();
-        MobileAds.initialize(this, "ca-app-pub-3335585827854611~4200408157");
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
 
         settings = this.getSharedPreferences("appInfo", 0);
         firstTime = settings.getBoolean("first_time", true);
@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 runthread(lst.get(fori));
             }
             editor.commit();
+            sendpreftoserver();
             setContentView(R.layout.maincatlayout);
 
             ImageView imageView1 = findViewById(R.id.catimg1);
@@ -177,6 +178,8 @@ public class MainActivity extends AppCompatActivity {
             AdView adView = findViewById(R.id.adView);
             AdRequest adRequest = new AdRequest.Builder().build();
             adView.loadAd(adRequest);
+
+
         }
     }
 
@@ -272,5 +275,33 @@ public class MainActivity extends AppCompatActivity {
 
         JobScheduler jobScheduler = (JobScheduler) getSystemService(this.JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(myjob);
+    }
+
+    public void  sendpreftoserver()
+    {
+
+        Log.i("DKBOSE","sendpreftoserver");
+
+        String s =FirebaseInstanceId.getInstance().getToken();
+
+
+        SharedPreferences catpref = getSharedPreferences("catpref", 0);
+        SharedPreferences catcount = getSharedPreferences("catcount", 0);
+
+        int count = catcount.getInt("count", 0);
+
+        for (int i = 0; i < count; i++) {
+            String cat = catpref.getString("cat" + i, "nopref");
+            if (!cat.equals("nopref")) {
+                Log.i("DKBOSE","inside for loop");
+                Log.i("DKBOSE","cat - "+cat);
+
+                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Users/" + cat);
+                String uid = myRef.push().getKey();
+                Log.i("DKBOSE","uid - "+uid);
+                Log.i("DKBOSE","token - "+s);
+                myRef.child(uid).setValue(s);
+            }
+        }
     }
 }

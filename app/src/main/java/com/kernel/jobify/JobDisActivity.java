@@ -44,9 +44,9 @@ public class JobDisActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MobileAds.initialize(this, "ca-app-pub-3335585827854611~4200408157");
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
         interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId("ca-app-pub-3335585827854611/3178954615");
+        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         AdRequest adRequest = new AdRequest.Builder().build();
         interstitialAd.loadAd(adRequest);
 

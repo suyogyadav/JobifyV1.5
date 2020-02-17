@@ -46,7 +46,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         context = this;
 
-        MobileAds.initialize(this,"ca-app-pub-3335585827854611~4200408157");
+        MobileAds.initialize(this,"ca-app-pub-3940256099942544~3347511713");
 
         ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
@@ -135,7 +135,7 @@ public class MainActivity2 extends AppCompatActivity {
         {
             final AdView adView = new AdView(this);
             adView.setAdSize(new AdSize(300,250));
-            adView.setAdUnitId("ca-app-pub-3335585827854611/5421974575");
+            adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
             Log.i("ABCD","AD IS GETTING PLACED"+i);
             jobslist.add(i,adView);
         }
