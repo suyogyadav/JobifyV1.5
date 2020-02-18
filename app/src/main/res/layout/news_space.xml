@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="260dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="9dp"
     android:clipToPadding="false" >
 
-    <FrameLayout
-        android:elevation="6dp"
+    <com.google.android.material.card.MaterialCardView
+        android:elevation="8dp"
         android:background="#eeeeee"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="200dp"
         >
 
         <LinearLayout
@@ -21,13 +21,15 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_weight="8"
-                android:layout_width="match_parent"
+                android:layout_weight="5"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp">
 
                 <ImageView
                     android:layout_centerInParent="true"
                     android:id="@+id/newsimg"
+                    android:minHeight="20dp"
+                    android:minWidth="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="4dp" />
@@ -42,19 +44,31 @@
                     style="@style/Widget.AppCompat.ProgressBar"/>
 
             </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_weight="5"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                >
+
             <TextView
-                android:layout_marginTop="5dp"
-                android:layout_weight="2"
+                android:layout_marginStart="10dp"
+                android:layout_centerInParent="true"
                 android:textColor="@color/textPrimary"
                 android:id="@+id/newstitle"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:text="NEWS TITLE HERE"
                 android:textStyle="bold"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:textAlignment="center"
+                />
+
+            </RelativeLayout>
 
         </LinearLayout>
 
-    </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

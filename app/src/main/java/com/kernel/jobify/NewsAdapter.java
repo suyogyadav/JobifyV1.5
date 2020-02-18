@@ -51,8 +51,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case ITEAM_BANNER_AD:
 
                 default:
-                    LayoutInflater inflater1 = LayoutInflater.from(viewGroup.getContext());
-                    View view1 = inflater1.inflate(R.layout.adcardview,viewGroup,false);
+                    View view1 = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adcardview,viewGroup,false);
                     return new Adviewolder(view1);
         }
     }
@@ -63,37 +62,37 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         Log.i("ABCD","Position"+i);
         switch (getItemViewType(i))
         {
-            case ITEAM_JOB:
+            case ITEAM_JOB: {
+                Log.i("Joblist","news bind view "+i);
                 newsviewholder newsviewholder = (newsviewholder) viewHolder;
-                JobData jobData =(JobData) jobslist.get(i);
-                if (jobData.getJobPhotoLink()!=null) {
-                    new DownloadImageTask(newsviewholder.imgicon,newsviewholder.progressBar)
+                JobData jobData = (JobData) jobslist.get(i);
+                if (jobData.getJobPhotoLink() != null) {
+                    new DownloadImageTask(newsviewholder.imgicon, newsviewholder.progressBar)
                             .execute(jobData.getJobPhotoLink());
-                }else
-                {
+                } else {
                     newsviewholder.imgicon.setImageResource(R.mipmap.ic_launcher);
                     newsviewholder.progressBar.setVisibility(View.GONE);
                 }
-                newsviewholder.title.setText( jobData.getJobTitle());
-                break;
+                newsviewholder.title.setText(jobData.getJobTitle());
+            }
+            break;
 
-            case ITEAM_BANNER_AD:
-                default:
-                    Adviewolder adviewolder = (Adviewolder) viewHolder;
-                    AdView adView = (AdView) jobslist.get(i);
-                    Log.i("ABCD","ADCASTDONEON "+i);
-                    ViewGroup adcardview = (ViewGroup) adviewolder.itemView;
+            case ITEAM_BANNER_AD: {
+                Log.i("Joblist","ads bind view "+i);
+                //Adviewolder adviewolder = (Adviewolder) viewHolder;
+                AdView adView = (AdView) jobslist.get(i);
+                Log.i("ABCD", "ADCASTDONEON " + i);
+                ViewGroup adcardview = (ViewGroup) viewHolder.itemView;
 
-                    if (adcardview.getChildCount()>0)
-                    {
-                        adcardview.removeAllViews();
-                    }
-                    if (adcardview.getParent()!=null)
-                    {
-                        ((ViewGroup)adView.getParent()).removeView(adView);
-                    }
-                    adcardview.addView(adView);
-                    break;
+                if (adcardview.getChildCount() > 0) {
+                    adcardview.removeAllViews();
+                }
+                if (adcardview.getParent() != null) {
+                    ((ViewGroup) adView.getParent()).removeView(adView);
+                }
+                adcardview.addView(adView);
+            }
+            break;
         }
     }
 
@@ -146,10 +145,10 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public class Adviewolder extends RecyclerView.ViewHolder
     {
-
-        public Adviewolder(@NonNull View itemView) {
+        public Adviewolder(View itemView) {
             super(itemView);
         }
+
     }
 
 

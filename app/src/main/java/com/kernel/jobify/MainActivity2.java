@@ -7,12 +7,14 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
 
@@ -112,11 +114,31 @@ public class MainActivity2 extends AppCompatActivity {
                         Log.i("ABCD", "" + jobData.getJobTitle());
                     }
 
-                    Collections.reverse(jobslist);
+                    //Collections.reverse(jobslist);
                     jobslist = getbannerad(jobslist);
                     jobslist = loadads(jobslist);
+                    printjoblist(jobslist);
                     RecyclerView res = findViewById(R.id.rscview);
-                    res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+
+                    GridLayoutManager manager = new GridLayoutManager(getBaseContext(),2,GridLayoutManager.VERTICAL,false);
+                    manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                        @Override
+                        public int getSpanSize(int position) {
+                            switch ((position+1)%5) {
+                                case 0:
+                                    return 2;
+                                case 1:
+                                case 2:
+                                case 3:
+                                case 4:
+                                    return 1;
+
+                                default:
+                                    return 1;
+                            }
+                        }
+                    });
+                    res.setLayoutManager(manager);
                     res.setAdapter(new NewsAdapter(jobslist,getBaseContext()));
                 }
             }
@@ -129,12 +151,28 @@ public class MainActivity2 extends AppCompatActivity {
 
     }
 
+    public void printjoblist(List<Object> lst)
+    {
+        for (int i=0;i<lst.size();i++)
+        {
+            Object item = lst.get(i);
+            if (item instanceof AdView)
+            {
+                Log.i("Joblist","adview " +i);
+            }
+            else
+            {
+                Log.i("Joblist","newsview " +i);
+            }
+        }
+    }
     public List<Object> getbannerad(List<Object> jobslist)
     {
-        for (int i =1;i<jobslist.size();i=i+3)
+        for (int i =4;i<jobslist.size();i=i+5)
         {
             final AdView adView = new AdView(this);
             adView.setAdSize(new AdSize(300,250));
+
             adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
             Log.i("ABCD","AD IS GETTING PLACED"+i);
             jobslist.add(i,adView);
