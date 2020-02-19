@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,39 +10,42 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#FFFFFF"
-        >
+        android:background="@color/colorPrimary">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/newstoolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <ImageView
-                android:layout_gravity="center"
-                android:src="@drawable/appnamelogo"
                 android:layout_width="200dp"
-                android:layout_height="wrap_content"/>
-           <!-- <TextView
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/appnamelogo" />
+            <!--
+            <TextView
+                android:id="@+id/appbartitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/app_name"
+                android:textColor="#FFFFFF"
                 android:textSize="20dp"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                />
 -->
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:elevation="6dp"
         android:id="@+id/rscview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:elevation="6dp"
         android:nestedScrollingEnabled="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

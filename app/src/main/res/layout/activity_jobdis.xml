@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,7 +14,7 @@
         android:id="@+id/appbarjobdis"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#FFFFFF">
+        android:background="@color/colorPrimary">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/jobdistoolbar"
@@ -73,13 +73,14 @@
             </RelativeLayout>
 
             <TextView
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:id="@+id/jobdistitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="#FFFFFF"
+                android:fontFamily="@font/roboto_slab_bold"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="JOBTITILE"
                 android:textColor="#000000"
                 android:textSize="20sp"
@@ -97,7 +98,8 @@
                 android:scrollbars="vertical"
                 android:text="Job Discription"
                 android:textColor="#000000"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:fontFamily="@font/roboto_slab"/>
 
             <Button
                 android:id="@+id/jobdisbtn"
@@ -106,7 +108,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
                 android:onClick="openbowser"
-                android:text="Apply Now!!" />
+                android:text="Apply Now!!"
+                android:fontFamily="@font/roboto_slab" />
 
         </LinearLayout>
     </ScrollView>

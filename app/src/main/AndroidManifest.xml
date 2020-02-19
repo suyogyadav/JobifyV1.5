@@ -44,9 +44,12 @@
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
             android:value="true" />
-<!--        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/finallogo" /> -->
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+        <!--        <meta-data
+                    android:name="com.google.firebase.messaging.default_notification_icon"
+                    android:resource="@drawable/finallogo" /> -->
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package com.kernel.jobify;
 
 import android.content.Context;
 
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -114,7 +116,7 @@ public class MainActivity2 extends AppCompatActivity {
                         Log.i("ABCD", "" + jobData.getJobTitle());
                     }
 
-                    //Collections.reverse(jobslist);
+                    Collections.reverse(jobslist);
                     jobslist = getbannerad(jobslist);
                     jobslist = loadads(jobslist);
                     printjoblist(jobslist);

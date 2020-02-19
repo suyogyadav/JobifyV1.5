@@ -14,7 +14,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 
-import android.text.method.ScrollingMovementMethod;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +38,7 @@ public class JobDisActivity extends AppCompatActivity {
     TextView disc;
     ImageView img;
 
+
     private InterstitialAd interstitialAd;
 
     @Override
@@ -58,6 +59,7 @@ public class JobDisActivity extends AppCompatActivity {
 
         if (info != null && info.isConnected()) {
             setContentView(R.layout.activity_jobdis);
+
             showdata = new JobData();
             Toolbar toolbar = findViewById(R.id.jobdistoolbar);
             toolbar.setNavigationIcon(R.drawable.ic_action_back);
@@ -91,7 +93,6 @@ public class JobDisActivity extends AppCompatActivity {
             }
             title.setText(showdata1.getJobTitle());
             disc.setText(showdata1.getJobDisc().replace("_n", "\n"));
-            //disc.setMovementMethod(new ScrollingMovementMethod());
             showdata = showdata1;
         } else {
             setContentView(R.layout.blnt);
