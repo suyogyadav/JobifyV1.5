@@ -91,6 +91,18 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         setContentView(R.layout.maincatlayout);
 
+                        SharedPreferences tockengen = getSharedPreferences("tockengen",0);
+                        boolean avilable = tockengen.getBoolean("avilable",false);
+                        if(avilable)
+                        {
+                            Log.i("alan","status avilable");
+                            sendpreftoserver();
+                            tockengen.edit().putBoolean("avilable",false).commit();
+                        }
+                        else {
+                            Log.i("alan","send to server not called");
+                        }
+
                         ImageView imageView1 = findViewById(R.id.catimg1);
                         imageView1.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[0])));
                         ImageView imageView2 = findViewById(R.id.catimg2);
@@ -146,7 +158,17 @@ public class MainActivity extends AppCompatActivity {
                 runthread(lst.get(fori));
             }
             editor.commit();
-            sendpreftoserver();
+            SharedPreferences tockengen = getSharedPreferences("tockengen",0);
+            boolean avilable = tockengen.getBoolean("avilable",false);
+            if(avilable)
+            {
+                Log.i("alan","status avilable");
+                sendpreftoserver();
+                tockengen.edit().putBoolean("avilable",false).commit();
+            }
+            else {
+                Log.i("alan","send to server not called");
+            }
             setContentView(R.layout.maincatlayout);
 
             ImageView imageView1 = findViewById(R.id.catimg1);
@@ -279,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void  sendpreftoserver()
     {
-
+        Log.i("alan","inside send to server");
         Log.i("DKBOSE","sendpreftoserver");
 
         String s =FirebaseInstanceId.getInstance().getToken();

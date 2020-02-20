@@ -7,11 +7,16 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyService extends FirebaseMessagingService {
 
-    SharedPreferences settings;
+    SharedPreferences tockengenerated;
     boolean firstTime;
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
+        Log.i("alan","inside newtoken");
+        tockengenerated = getSharedPreferences("tockengen",0);
+        tockengenerated.edit().putBoolean("avilable",true).commit();
+        Log.i("alan","status put to true");
+
 //        settings = this.getSharedPreferences("appInfo", 0);
 //        firstTime = settings.getBoolean("first_time", true);
 //        if(!firstTime) {

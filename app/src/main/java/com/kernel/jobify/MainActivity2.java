@@ -2,6 +2,7 @@ package com.kernel.jobify;
 
 import android.content.Context;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -16,6 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +29,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,6 +53,7 @@ public class MainActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         context = this;
+        BottomNavigationView navigationView;
 
         MobileAds.initialize(this,"ca-app-pub-3940256099942544~3347511713");
 
@@ -59,6 +64,28 @@ public class MainActivity2 extends AppCompatActivity {
         if (info!= null && info.isConnected()) {
             setContentView(R.layout.activity_main_2);
 
+            navigationView = findViewById(R.id.btm_nav);
+            BottomNavigationView.OnNavigationItemSelectedListener listener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                    switch (menuItem.getItemId())
+                    {
+                        case R.id.navigation_news:
+                            return true;
+
+                        case R.id.navigation_cat:
+                            startActivity(new Intent(context,MainActivity.class));
+                            return true;
+
+                        case R.id.navigation_bookmark:
+                            //startActivity(new Intent(context,MainActivity.class));
+                            return true;
+                    }
+                    return false;
+                }
+            };
+            navigationView.setOnNavigationItemSelectedListener(listener);
             Toolbar toolbar = findViewById(R.id.newstoolbar);
             toolbar.setNavigationIcon(R.drawable.ic_action_back);
 

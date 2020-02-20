@@ -16,6 +16,7 @@
         android:textSize="35sp"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
+        android:fontFamily="@font/roboto_slab_bold"
         />
 
 </RelativeLayout>
