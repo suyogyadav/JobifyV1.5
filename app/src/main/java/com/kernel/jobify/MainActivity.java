@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
-        scheduleJob();
+        //scheduleJob();
         MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
 
         settings = this.getSharedPreferences("appInfo", 0);
@@ -102,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
                         else {
                             Log.i("alan","send to server not called");
                         }
+//                        Intent intent = new Intent(context, MainActivity2.class);
+//                        intent.putExtra("CAT", getcat());
+//                        startActivity(intent);
 
                         ImageView imageView1 = findViewById(R.id.catimg1);
                         imageView1.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[0])));
@@ -139,6 +143,24 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 3000);
 
+    }
+
+    public String getcat()
+    {
+        SharedPreferences catpref = getSharedPreferences("catpref", 0);
+        SharedPreferences catcount = getSharedPreferences("catcount", 0);
+        String sendcat;
+        int count = catcount.getInt("count", 0);
+        for (int i = 0; i < count; i++) {
+            String cat = catpref.getString("cat" + i, "nopref");
+            if (!cat.equals("nopref")) {
+                return cat;
+            }
+            else {
+                return cat;
+            }
+        }
+        return "nopref";
     }
 
     public void PrefSubmit(View view) {
@@ -312,17 +334,21 @@ public class MainActivity extends AppCompatActivity {
 
         int count = catcount.getInt("count", 0);
 
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Users/All_User");
+        String unid = myRef.push().getKey();
+        myRef.child(unid).setValue(s);
+
         for (int i = 0; i < count; i++) {
             String cat = catpref.getString("cat" + i, "nopref");
             if (!cat.equals("nopref")) {
                 Log.i("DKBOSE","inside for loop");
                 Log.i("DKBOSE","cat - "+cat);
 
-                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Users/" + cat);
-                String uid = myRef.push().getKey();
+                DatabaseReference Ref = FirebaseDatabase.getInstance().getReference("Users/" + cat);
+                String uid = Ref.push().getKey();
                 Log.i("DKBOSE","uid - "+uid);
                 Log.i("DKBOSE","token - "+s);
-                myRef.child(uid).setValue(s);
+                Ref.child(uid).setValue(s);
             }
         }
     }

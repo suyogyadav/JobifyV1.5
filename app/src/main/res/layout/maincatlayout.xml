@@ -304,6 +304,7 @@
 
         </LinearLayout>
 
+
         <com.google.android.gms.ads.AdView
             android:layout_below="@id/lay4"
             android:layout_gravity="bottom|center"
@@ -315,6 +316,15 @@
             app:adSize="BANNER"
             app:adUnitId="ca-app-pub-3940256099942544/6300978111"/>
 
-    </LinearLayout>
+    <!--
+       <LinearLayout
+           android:id="@+id/banner_container"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_gravity="bottom|center"
+           android:orientation="vertical"
+           app:layout_constraintBottom_toBottomOf="parent" />
+     -->
+   </LinearLayout>
 
 </RelativeLayout>
