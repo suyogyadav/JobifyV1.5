@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity"
-    android:background="#e9eff5">
-
+    tools:context=".BookMark">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -32,24 +29,12 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.ContentLoadingProgressBar
-        android:id="@+id/prgbar"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <TextView
+        android:textSize="20sp"
+        android:text="bookmark activity"
         android:layout_centerInParent="true"
-        android:foregroundTint="@color/colorPrimary"
-        android:minWidth="20dp"
-        android:minHeight="20dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rscview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/appbar"
-        android:elevation="6dp"
-        android:nestedScrollingEnabled="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:id="@+id/bookmarname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>
-

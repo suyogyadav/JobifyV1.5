@@ -22,6 +22,8 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,11 +33,11 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+
 import android.widget.ProgressBar;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -43,7 +45,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -70,13 +72,14 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences catpref;
     SharedPreferences catcount;
     int fori;
-    int[] catlogo = {R.drawable.catlogo01, R.drawable.catlogo02, R.drawable.catlogo03, R.drawable.catlogo04, R.drawable.catlogo05, R.drawable.catlogo06};
-    String[] showlist = {"IT", "Electronics", "Mechanical", "Civil", "Government", "Internship"};
+    NavigationView navigationView;
+    DrawerLayout drawerLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.splash_screen);
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         //scheduleJob();
         MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
@@ -106,17 +109,14 @@ public class MainActivity extends AppCompatActivity {
                         res.setAdapter(new ListAdapterPref(getBaseContext()));
                     } else {
                         //setContentView(R.layout.maincatlayout);
-
-                        SharedPreferences tockengen = getSharedPreferences("tockengen",0);
-                        boolean avilable = tockengen.getBoolean("avilable",false);
-                        if(avilable)
-                        {
-                            Log.i("alan","status avilable");
+                        SharedPreferences tockengen = getSharedPreferences("tockengen", 0);
+                        boolean avilable = tockengen.getBoolean("avilable", false);
+                        if (avilable) {
+                            Log.i("alan", "status avilable");
                             sendpreftoserver();
-                            tockengen.edit().putBoolean("avilable",false).commit();
-                        }
-                        else {
-                            Log.i("alan","send to server not called");
+                            tockengen.edit().putBoolean("avilable", false).commit();
+                        } else {
+                            Log.i("alan", "send to server not called");
                         }
 
                         ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
@@ -124,49 +124,43 @@ public class MainActivity extends AppCompatActivity {
 
 
                         if (info != null && info.isConnected()) {
-                            setContentView(R.layout.activity_main_2);
+                            setContentView(R.layout.activity_main);
+                            navigationView = findViewById(R.id.nav_view);
+                            drawerLayout = findViewById(R.id.drawer_layout);
+
                             prgbar = findViewById(R.id.prgbar);
                             prgbar.setVisibility(View.VISIBLE);
-                            jobslist = new ArrayList<>();
 
+                            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                                @Override
+                                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                                    switch (menuItem.getItemId()) {
+                                        case R.id.navigation_cat:
+                                            drawerLayout.closeDrawers();
+                                            startActivity(new Intent(context, MainCatLayout.class));
+                                            return true;
+
+                                        case R.id.navigation_bookmark:
+                                            drawerLayout.closeDrawers();
+                                            startActivity(new Intent(context, BookMark.class));
+                                            return true;
+
+//                                        case R.id.navigation_about_us:
+//                                            drawerLayout.closeDrawers();
+//                                            startActivity(new Intent(context,BookMark.class));
+//                                            return true;
+                                    }
+                                    return false;
+                                }
+                            });
+
+                            jobslist = new ArrayList<>();
                             retrivedata(getcat());
-                        }else {
+
+                        } else {
                             setContentView(R.layout.blnt);
                         }
 
-//                        Intent intent = new Intent(context, MainActivity2.class);
-//                        intent.putExtra("CAT", getcat());
-//                        startActivity(intent);
-//
-//                        ImageView imageView1 = findViewById(R.id.catimg1);
-//                        imageView1.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[0])));
-//                        ImageView imageView2 = findViewById(R.id.catimg2);
-//                        imageView2.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[1])));
-//                        ImageView imageView3 = findViewById(R.id.catimg3);
-//                        imageView3.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[2])));
-//                        ImageView imageView4 = findViewById(R.id.catimg4);
-//                        imageView4.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[3])));
-//                        ImageView imageView5 = findViewById(R.id.catimg5);
-//                        imageView5.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[4])));
-//                        ImageView imageView6 = findViewById(R.id.catimg6);
-//                        imageView6.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[5])));
-//
-//                        TextView textView1 = findViewById(R.id.catname1);
-//                        textView1.setText(showlist[0]);
-//                        TextView textView2 = findViewById(R.id.catname2);
-//                        textView2.setText(showlist[1]);
-//                        TextView textView3 = findViewById(R.id.catname3);
-//                        textView3.setText(showlist[2]);
-//                        TextView textView4 = findViewById(R.id.catname4);
-//                        textView4.setText(showlist[3]);
-//                        TextView textView5 = findViewById(R.id.catname5);
-//                        textView5.setText(showlist[4]);
-//                        TextView textView6 = findViewById(R.id.catname6);
-//                        textView6.setText(showlist[5]);
-//
-//                        AdView adView = findViewById(R.id.adView);
-//                        AdRequest adRequest = new AdRequest.Builder().build();
-//                        adView.loadAd(adRequest);
                     }
                 }
 
@@ -174,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 3000);
 
+    }
+
+    public void openDrawer(View view) {
+        drawerLayout = findViewById(R.id.drawer_layout);
+        drawerLayout.openDrawer(GravityCompat.START);
     }
 
     public void retrivedata(String CAT) {
@@ -271,8 +270,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public String getcat()
-    {
+    public String getcat() {
         SharedPreferences catpref = getSharedPreferences("catpref", 0);
         SharedPreferences catcount = getSharedPreferences("catcount", 0);
         int count = catcount.getInt("count", 0);
@@ -280,8 +278,7 @@ public class MainActivity extends AppCompatActivity {
             String cat = catpref.getString("cat" + i, "nopref");
             if (!cat.equals("nopref")) {
                 return cat;
-            }
-            else {
+            } else {
                 return "IT";
             }
         }
@@ -305,67 +302,54 @@ public class MainActivity extends AppCompatActivity {
                 runthread(lst.get(fori));
             }
             editor.commit();
-            SharedPreferences tockengen = getSharedPreferences("tockengen",0);
-            boolean avilable = tockengen.getBoolean("avilable",false);
-            if(avilable)
-            {
-                Log.i("alan","status avilable");
+            SharedPreferences tockengen = getSharedPreferences("tockengen", 0);
+            boolean avilable = tockengen.getBoolean("avilable", false);
+            if (avilable) {
+                Log.i("alan", "status avilable");
                 sendpreftoserver();
-                tockengen.edit().putBoolean("avilable",false).commit();
-            }
-            else {
-                Log.i("alan","send to server not called");
+                tockengen.edit().putBoolean("avilable", false).commit();
+            } else {
+                Log.i("alan", "send to server not called");
             }
 
             ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
             NetworkInfo info = cm.getActiveNetworkInfo();
 
-
             if (info != null && info.isConnected()) {
-                setContentView(R.layout.activity_main_2);
+                setContentView(R.layout.activity_main);
+                navigationView = findViewById(R.id.nav_view);
+                drawerLayout = findViewById(R.id.drawer_layout);
+
                 prgbar = findViewById(R.id.prgbar);
                 prgbar.setVisibility(View.VISIBLE);
-                jobslist = new ArrayList<>();
 
+                navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.navigation_cat:
+                                drawerLayout.closeDrawers();
+                                startActivity(new Intent(context, MainCatLayout.class));
+                                return true;
+
+                            case R.id.navigation_bookmark:
+                                drawerLayout.closeDrawers();
+                                startActivity(new Intent(context, BookMark.class));
+                                return true;
+//
+//                                        case R.id.navigation_about_us:
+//                                            drawerLayout.closeDrawers();
+//                                            startActivity(new Intent(context,BookMark.class));
+//                                            return true;
+                        }
+                        return false;
+                    }
+                });
+                jobslist = new ArrayList<>();
                 retrivedata(getcat());
-            }else {
+            } else {
                 setContentView(R.layout.blnt);
             }
-
-//            setContentView(R.layout.maincatlayout);
-//            Intent intent = new Intent(context, MainActivity2.class);
-//            intent.putExtra("CAT", getcat());
-//            startActivity(intent);
-//            ImageView imageView1 = findViewById(R.id.catimg1);
-//            imageView1.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[0])));
-//            ImageView imageView2 = findViewById(R.id.catimg2);
-//            imageView2.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[1])));
-//            ImageView imageView3 = findViewById(R.id.catimg3);
-//            imageView3.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[2])));
-//            ImageView imageView4 = findViewById(R.id.catimg4);
-//            imageView4.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[3])));
-//            ImageView imageView5 = findViewById(R.id.catimg5);
-//            imageView5.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[4])));
-//            ImageView imageView6 = findViewById(R.id.catimg6);
-//            imageView6.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[5])));
-//
-//            TextView textView1 = findViewById(R.id.catname1);
-//            textView1.setText(showlist[0]);
-//            TextView textView2 = findViewById(R.id.catname2);
-//            textView2.setText(showlist[1]);
-//            TextView textView3 = findViewById(R.id.catname3);
-//            textView3.setText(showlist[2]);
-//            TextView textView4 = findViewById(R.id.catname4);
-//            textView4.setText(showlist[3]);
-//            TextView textView5 = findViewById(R.id.catname5);
-//            textView5.setText(showlist[4]);
-//            TextView textView6 = findViewById(R.id.catname6);
-//            textView6.setText(showlist[5]);
-//
-//            AdView adView = findViewById(R.id.adView);
-//            AdRequest adRequest = new AdRequest.Builder().build();
-//            adView.loadAd(adRequest);
-
 
         }
     }
@@ -393,42 +377,6 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
-    }
-
-    public void btnIT(View view) {
-        Intent intent = new Intent(this, MainActivity2.class);
-        intent.putExtra("CAT", "IT");
-        startActivity(intent);
-    }
-
-    public void btnECS(View view) {
-        Intent intent = new Intent(this, MainActivity2.class);
-        intent.putExtra("CAT", "ECS");
-        startActivity(intent);
-    }
-
-    public void btnMECH(View view) {
-        Intent intent = new Intent(this, MainActivity2.class);
-        intent.putExtra("CAT", "MECH");
-        startActivity(intent);
-    }
-
-    public void btnCIVIL(View view) {
-        Intent intent = new Intent(this, MainActivity2.class);
-        intent.putExtra("CAT", "CIVIL");
-        startActivity(intent);
-    }
-
-    public void btnGOVT(View view) {
-        Intent intent = new Intent(this, MainActivity2.class);
-        intent.putExtra("CAT", "GOVT");
-        startActivity(intent);
-    }
-
-    public void btnINTERN(View view) {
-        Intent intent = new Intent(this, MainActivity2.class);
-        intent.putExtra("CAT", "INTERN");
-        startActivity(intent);
     }
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
@@ -464,12 +412,11 @@ public class MainActivity extends AppCompatActivity {
         jobScheduler.schedule(myjob);
     }
 
-    public void  sendpreftoserver()
-    {
-        Log.i("alan","inside send to server");
-        Log.i("DKBOSE","sendpreftoserver");
+    public void sendpreftoserver() {
+        Log.i("alan", "inside send to server");
+        Log.i("DKBOSE", "sendpreftoserver");
 
-        String s =FirebaseInstanceId.getInstance().getToken();
+        String s = FirebaseInstanceId.getInstance().getToken();
 
 
         SharedPreferences catpref = getSharedPreferences("catpref", 0);
@@ -484,13 +431,13 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < count; i++) {
             String cat = catpref.getString("cat" + i, "nopref");
             if (!cat.equals("nopref")) {
-                Log.i("DKBOSE","inside for loop");
-                Log.i("DKBOSE","cat - "+cat);
+                Log.i("DKBOSE", "inside for loop");
+                Log.i("DKBOSE", "cat - " + cat);
 
                 DatabaseReference Ref = FirebaseDatabase.getInstance().getReference("Users/" + cat);
                 String uid = Ref.push().getKey();
-                Log.i("DKBOSE","uid - "+uid);
-                Log.i("DKBOSE","token - "+s);
+                Log.i("DKBOSE", "uid - " + uid);
+                Log.i("DKBOSE", "token - " + s);
                 Ref.child(uid).setValue(s);
             }
         }

@@ -28,6 +28,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,69 +48,21 @@ public class MainActivity2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         context = this;
-        BottomNavigationView navigationView;
-
         MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        setContentView(R.layout.activity_main_2);
 
-        ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
+        Toolbar toolbar = findViewById(R.id.newstoolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-
-        if (info != null && info.isConnected()) {
-            setContentView(R.layout.activity_main_2);
-
-//            navigationView = findViewById(R.id.btm_nav);
-//            BottomNavigationView.OnNavigationItemSelectedListener listener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-//                @Override
-//                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-//
-//                    switch (menuItem.getItemId()) {
-//                        case R.id.navigation_news:
-//                            return true;
-//
-//                        case R.id.navigation_cat:
-//                            startActivity(new Intent(context, MainActivity.class));
-//                            overridePendingTransition(0, 0);
-//                            return true;
-//
-//                        case R.id.navigation_bookmark:
-//                            //startActivity(new Intent(context,MainActivity.class));
-//                            return true;
-//                    }
-//                    return false;
-//                }
-//            };
-//            navigationView.setOnNavigationItemSelectedListener(listener);
-
-            Toolbar toolbar = findViewById(R.id.newstoolbar);
-            toolbar.setNavigationIcon(R.drawable.ic_action_back);
-
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-
-
-            jobslist = new ArrayList<>();
-
-            retrivedata(getIntent().getStringExtra("CAT"));
-        } else {
-            setContentView(R.layout.blnt);
-            Toolbar toolbar = findViewById(R.id.blnttoolbar);
-            toolbar.setNavigationIcon(R.drawable.ic_action_back);
-
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-        }
-
+        jobslist = new ArrayList<>();
+        retrivedata(getIntent().getStringExtra("CAT"));
     }
 
 

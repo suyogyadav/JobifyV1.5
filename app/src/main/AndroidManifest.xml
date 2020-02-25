@@ -17,6 +17,9 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:appComponentFactory">
+        <activity android:name=".MainCatLayout"></activity>
+        <activity android:name=".BookMark" />
+
         <service
             android:name=".MyService"
             android:exported="false">
@@ -48,9 +51,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-        <!--        <meta-data
-                    android:name="com.google.firebase.messaging.default_notification_icon"
-                    android:resource="@drawable/finallogo" /> -->
     </application>
 
 </manifest>

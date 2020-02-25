@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".MainCatLayout"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -316,15 +316,6 @@
             app:adSize="BANNER"
             app:adUnitId="ca-app-pub-3940256099942544/6300978111"/>
 
-    <!--
-       <LinearLayout
-           android:id="@+id/banner_container"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_gravity="bottom|center"
-           android:orientation="vertical"
-           app:layout_constraintBottom_toBottomOf="parent" />
-     -->
    </LinearLayout>
 
 </RelativeLayout>
