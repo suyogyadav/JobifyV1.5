@@ -42,7 +42,6 @@ public class MainActivity2 extends AppCompatActivity {
 
     DatabaseReference databaseRef;
     List<Object> jobslist;
-    List<Object> jobadlist;
     Context context;
 
     @Override
@@ -61,27 +60,29 @@ public class MainActivity2 extends AppCompatActivity {
         if (info != null && info.isConnected()) {
             setContentView(R.layout.activity_main_2);
 
-            navigationView = findViewById(R.id.btm_nav);
-            BottomNavigationView.OnNavigationItemSelectedListener listener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+//            navigationView = findViewById(R.id.btm_nav);
+//            BottomNavigationView.OnNavigationItemSelectedListener listener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+//                @Override
+//                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+//
+//                    switch (menuItem.getItemId()) {
+//                        case R.id.navigation_news:
+//                            return true;
+//
+//                        case R.id.navigation_cat:
+//                            startActivity(new Intent(context, MainActivity.class));
+//                            overridePendingTransition(0, 0);
+//                            return true;
+//
+//                        case R.id.navigation_bookmark:
+//                            //startActivity(new Intent(context,MainActivity.class));
+//                            return true;
+//                    }
+//                    return false;
+//                }
+//            };
+//            navigationView.setOnNavigationItemSelectedListener(listener);
 
-                    switch (menuItem.getItemId()) {
-                        case R.id.navigation_news:
-                            return true;
-
-                        case R.id.navigation_cat:
-                            startActivity(new Intent(context, MainActivity.class));
-                            return true;
-
-                        case R.id.navigation_bookmark:
-                            //startActivity(new Intent(context,MainActivity.class));
-                            return true;
-                    }
-                    return false;
-                }
-            };
-            navigationView.setOnNavigationItemSelectedListener(listener);
             Toolbar toolbar = findViewById(R.id.newstoolbar);
             toolbar.setNavigationIcon(R.drawable.ic_action_back);
 

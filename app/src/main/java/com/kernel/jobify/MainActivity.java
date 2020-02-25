@@ -1,5 +1,6 @@
 package com.kernel.jobify;
 
+import android.app.Activity;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
@@ -14,10 +15,14 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,14 +32,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,10 +55,16 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    DatabaseReference databaseRef;
+    List<Object> jobslist;
     Context context;
+    ProgressBar prgbar;
     boolean firstTime;
     SharedPreferences settings;
     SharedPreferences catpref;
@@ -64,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         //scheduleJob();
         MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
-
         settings = this.getSharedPreferences("appInfo", 0);
         firstTime = settings.getBoolean("first_time", true);
         catcount = getSharedPreferences("catcount", 0);
@@ -90,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                         res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
                         res.setAdapter(new ListAdapterPref(getBaseContext()));
                     } else {
-                        setContentView(R.layout.maincatlayout);
+                        //setContentView(R.layout.maincatlayout);
 
                         SharedPreferences tockengen = getSharedPreferences("tockengen",0);
                         boolean avilable = tockengen.getBoolean("avilable",false);
@@ -103,39 +118,55 @@ public class MainActivity extends AppCompatActivity {
                         else {
                             Log.i("alan","send to server not called");
                         }
+
+                        ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
+                        NetworkInfo info = cm.getActiveNetworkInfo();
+
+
+                        if (info != null && info.isConnected()) {
+                            setContentView(R.layout.activity_main_2);
+                            prgbar = findViewById(R.id.prgbar);
+                            prgbar.setVisibility(View.VISIBLE);
+                            jobslist = new ArrayList<>();
+
+                            retrivedata(getcat());
+                        }else {
+                            setContentView(R.layout.blnt);
+                        }
+
 //                        Intent intent = new Intent(context, MainActivity2.class);
 //                        intent.putExtra("CAT", getcat());
 //                        startActivity(intent);
-
-                        ImageView imageView1 = findViewById(R.id.catimg1);
-                        imageView1.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[0])));
-                        ImageView imageView2 = findViewById(R.id.catimg2);
-                        imageView2.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[1])));
-                        ImageView imageView3 = findViewById(R.id.catimg3);
-                        imageView3.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[2])));
-                        ImageView imageView4 = findViewById(R.id.catimg4);
-                        imageView4.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[3])));
-                        ImageView imageView5 = findViewById(R.id.catimg5);
-                        imageView5.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[4])));
-                        ImageView imageView6 = findViewById(R.id.catimg6);
-                        imageView6.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[5])));
-
-                        TextView textView1 = findViewById(R.id.catname1);
-                        textView1.setText(showlist[0]);
-                        TextView textView2 = findViewById(R.id.catname2);
-                        textView2.setText(showlist[1]);
-                        TextView textView3 = findViewById(R.id.catname3);
-                        textView3.setText(showlist[2]);
-                        TextView textView4 = findViewById(R.id.catname4);
-                        textView4.setText(showlist[3]);
-                        TextView textView5 = findViewById(R.id.catname5);
-                        textView5.setText(showlist[4]);
-                        TextView textView6 = findViewById(R.id.catname6);
-                        textView6.setText(showlist[5]);
-
-                        AdView adView = findViewById(R.id.adView);
-                        AdRequest adRequest = new AdRequest.Builder().build();
-                        adView.loadAd(adRequest);
+//
+//                        ImageView imageView1 = findViewById(R.id.catimg1);
+//                        imageView1.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[0])));
+//                        ImageView imageView2 = findViewById(R.id.catimg2);
+//                        imageView2.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[1])));
+//                        ImageView imageView3 = findViewById(R.id.catimg3);
+//                        imageView3.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[2])));
+//                        ImageView imageView4 = findViewById(R.id.catimg4);
+//                        imageView4.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[3])));
+//                        ImageView imageView5 = findViewById(R.id.catimg5);
+//                        imageView5.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[4])));
+//                        ImageView imageView6 = findViewById(R.id.catimg6);
+//                        imageView6.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[5])));
+//
+//                        TextView textView1 = findViewById(R.id.catname1);
+//                        textView1.setText(showlist[0]);
+//                        TextView textView2 = findViewById(R.id.catname2);
+//                        textView2.setText(showlist[1]);
+//                        TextView textView3 = findViewById(R.id.catname3);
+//                        textView3.setText(showlist[2]);
+//                        TextView textView4 = findViewById(R.id.catname4);
+//                        textView4.setText(showlist[3]);
+//                        TextView textView5 = findViewById(R.id.catname5);
+//                        textView5.setText(showlist[4]);
+//                        TextView textView6 = findViewById(R.id.catname6);
+//                        textView6.setText(showlist[5]);
+//
+//                        AdView adView = findViewById(R.id.adView);
+//                        AdRequest adRequest = new AdRequest.Builder().build();
+//                        adView.loadAd(adRequest);
                     }
                 }
 
@@ -145,11 +176,105 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void retrivedata(String CAT) {
+        databaseRef = FirebaseDatabase.getInstance().getReference(CAT);
+
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                jobslist.clear();
+
+                if (dataSnapshot.getChildrenCount() == 0) {
+                    Toast.makeText(context, "Sorry No Jobs Avilable At Time", Toast.LENGTH_SHORT).show();
+                } else {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                        JobData jobData = dataSnapshot1.getValue(JobData.class);
+                        jobslist.add(jobData);
+
+                        Log.i("ABCD", "" + dataSnapshot1.getKey());
+                        Log.i("ABCD", "" + jobData.getJobTitle());
+                    }
+
+                    Collections.reverse(jobslist);
+                    jobslist = getbannerad(jobslist);
+                    jobslist = loadads(jobslist);
+                    printjoblist(jobslist);
+                    RecyclerView res = findViewById(R.id.rscview);
+
+                    GridLayoutManager manager = new GridLayoutManager(getBaseContext(), 2, GridLayoutManager.VERTICAL, false);
+                    manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                        @Override
+                        public int getSpanSize(int position) {
+                            switch ((position + 1) % 5) {
+                                case 0:
+                                    return 2;
+                                case 1:
+                                case 2:
+                                case 3:
+                                case 4:
+                                    return 1;
+
+                                default:
+                                    return 1;
+                            }
+                        }
+                    });
+                    res.setLayoutManager(manager);
+                    prgbar.setVisibility(View.INVISIBLE);
+                    res.setAdapter(new NewsAdapter(jobslist, getBaseContext()));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void printjoblist(List<Object> lst) {
+        for (int i = 0; i < lst.size(); i++) {
+            Object item = lst.get(i);
+            if (item instanceof AdView) {
+                Log.i("Joblist", "adview " + i);
+            } else {
+                Log.i("Joblist", "newsview " + i);
+            }
+        }
+    }
+
+    public List<Object> getbannerad(List<Object> jobslist) {
+
+        for (int i = 4; i < jobslist.size(); i = i + 5) {
+            final AdView adView = new AdView(this);
+            adView.setAdSize(new AdSize(300, 250));
+            adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+            Log.i("ABCD", "AD IS GETTING PLACED" + i);
+            jobslist.add(i, adView);
+        }
+        return jobslist;
+
+    }
+
+    public List<Object> loadads(List<Object> jobslist) {
+        for (int i = 0; i < jobslist.size(); i++) {
+            Object item = jobslist.get(i);
+            if (item instanceof AdView) {
+                final AdView adView = (AdView) item;
+                adView.loadAd(new AdRequest.Builder().build());
+            }
+        }
+        return jobslist;
+    }
+
+
     public String getcat()
     {
         SharedPreferences catpref = getSharedPreferences("catpref", 0);
         SharedPreferences catcount = getSharedPreferences("catcount", 0);
-        String sendcat;
         int count = catcount.getInt("count", 0);
         for (int i = 0; i < count; i++) {
             String cat = catpref.getString("cat" + i, "nopref");
@@ -157,10 +282,10 @@ public class MainActivity extends AppCompatActivity {
                 return cat;
             }
             else {
-                return cat;
+                return "IT";
             }
         }
-        return "nopref";
+        return "IT";
     }
 
     public void PrefSubmit(View view) {
@@ -191,37 +316,55 @@ public class MainActivity extends AppCompatActivity {
             else {
                 Log.i("alan","send to server not called");
             }
-            setContentView(R.layout.maincatlayout);
 
-            ImageView imageView1 = findViewById(R.id.catimg1);
-            imageView1.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[0])));
-            ImageView imageView2 = findViewById(R.id.catimg2);
-            imageView2.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[1])));
-            ImageView imageView3 = findViewById(R.id.catimg3);
-            imageView3.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[2])));
-            ImageView imageView4 = findViewById(R.id.catimg4);
-            imageView4.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[3])));
-            ImageView imageView5 = findViewById(R.id.catimg5);
-            imageView5.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[4])));
-            ImageView imageView6 = findViewById(R.id.catimg6);
-            imageView6.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[5])));
+            ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
+            NetworkInfo info = cm.getActiveNetworkInfo();
 
-            TextView textView1 = findViewById(R.id.catname1);
-            textView1.setText(showlist[0]);
-            TextView textView2 = findViewById(R.id.catname2);
-            textView2.setText(showlist[1]);
-            TextView textView3 = findViewById(R.id.catname3);
-            textView3.setText(showlist[2]);
-            TextView textView4 = findViewById(R.id.catname4);
-            textView4.setText(showlist[3]);
-            TextView textView5 = findViewById(R.id.catname5);
-            textView5.setText(showlist[4]);
-            TextView textView6 = findViewById(R.id.catname6);
-            textView6.setText(showlist[5]);
 
-            AdView adView = findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder().build();
-            adView.loadAd(adRequest);
+            if (info != null && info.isConnected()) {
+                setContentView(R.layout.activity_main_2);
+                prgbar = findViewById(R.id.prgbar);
+                prgbar.setVisibility(View.VISIBLE);
+                jobslist = new ArrayList<>();
+
+                retrivedata(getcat());
+            }else {
+                setContentView(R.layout.blnt);
+            }
+
+//            setContentView(R.layout.maincatlayout);
+//            Intent intent = new Intent(context, MainActivity2.class);
+//            intent.putExtra("CAT", getcat());
+//            startActivity(intent);
+//            ImageView imageView1 = findViewById(R.id.catimg1);
+//            imageView1.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[0])));
+//            ImageView imageView2 = findViewById(R.id.catimg2);
+//            imageView2.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[1])));
+//            ImageView imageView3 = findViewById(R.id.catimg3);
+//            imageView3.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[2])));
+//            ImageView imageView4 = findViewById(R.id.catimg4);
+//            imageView4.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[3])));
+//            ImageView imageView5 = findViewById(R.id.catimg5);
+//            imageView5.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[4])));
+//            ImageView imageView6 = findViewById(R.id.catimg6);
+//            imageView6.setImageBitmap(getRoundedCornerBitmap(BitmapFactory.decodeResource(getResources(), catlogo[5])));
+//
+//            TextView textView1 = findViewById(R.id.catname1);
+//            textView1.setText(showlist[0]);
+//            TextView textView2 = findViewById(R.id.catname2);
+//            textView2.setText(showlist[1]);
+//            TextView textView3 = findViewById(R.id.catname3);
+//            textView3.setText(showlist[2]);
+//            TextView textView4 = findViewById(R.id.catname4);
+//            textView4.setText(showlist[3]);
+//            TextView textView5 = findViewById(R.id.catname5);
+//            textView5.setText(showlist[4]);
+//            TextView textView6 = findViewById(R.id.catname6);
+//            textView6.setText(showlist[5]);
+//
+//            AdView adView = findViewById(R.id.adView);
+//            AdRequest adRequest = new AdRequest.Builder().build();
+//            adView.loadAd(adRequest);
 
 
         }
