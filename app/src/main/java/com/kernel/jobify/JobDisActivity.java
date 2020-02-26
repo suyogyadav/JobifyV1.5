@@ -1,5 +1,6 @@
 package com.kernel.jobify;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -18,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -37,6 +39,7 @@ public class JobDisActivity extends AppCompatActivity {
     TextView title;
     TextView disc;
     ImageView img;
+    SharedPreferences bookmarks;
 
 
     private InterstitialAd interstitialAd;
@@ -136,6 +139,23 @@ public class JobDisActivity extends AppCompatActivity {
             Toast.makeText(this,"No Apply Link Avilable",Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public void bookMark(View view)
+    {
+        ImageButton imgbtn = findViewById(R.id.bookmarkbtn);
+        imgbtn.setImageDrawable(getDrawable(R.drawable.ic_bookmark_fill));
+        bookmarks = getSharedPreferences("bookmarks",0);
+        StringBuilder builder = new StringBuilder();
+        builder.append(showdata.getJobTitle())
+                .append("##")
+                .append(showdata.getJobDisc())
+                .append("##")
+                .append(showdata.getJobLink())
+                .append("##")
+                .append(showdata.getJobPhotoLink())
+                .append("^^");
+        bookmarks.edit().putString("book",builder.toString()).apply();
     }
 
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

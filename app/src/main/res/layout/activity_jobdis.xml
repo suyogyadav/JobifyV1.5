@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,20 +21,12 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:padding="10dp"
-                android:layout_gravity="center"
-                android:src="@drawable/appnamelogo"
                 android:layout_width="200dp"
-                android:layout_height="wrap_content"/>
-            <!-- <TextView
-                 android:layout_gravity="center"
-                 android:text="@string/app_name"
-                 android:textSize="20dp"
-                 android:textStyle="bold"
-                 android:textColor="#FFFFFF"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"/>
-                 -->
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:src="@drawable/appnamelogo" />
+
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -57,10 +48,10 @@
                 android:background="#FFFFFF">
 
                 <ImageView
-                    android:contentDescription="Company LOGO"
                     android:id="@+id/jobdisimg"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:contentDescription="Company LOGO" />
 
                 <ProgressBar
                     android:id="@+id/progressbar"
@@ -73,34 +64,55 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/jobdistitle"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="#FFFFFF"
-                android:fontFamily="@font/roboto_slab_bold"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="JOBTITILE"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:id="@+id/jobdistitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="8"
+                    android:background="#FFFFFF"
+                    android:fontFamily="@font/roboto_slab_bold"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="5dp"
+                    android:text="JOBTITILE"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/bookmarkbtn"
+                    android:contentDescription="BookMark Button"
+                    android:src="@drawable/ic_bookmark"
+                    android:layout_width="0dp"
+                    android:layout_marginVertical="5dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:background="#FFFFFF"
+                    android:onClick="bookMark"/>
+
+            </LinearLayout>
 
             <TextView
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:id="@+id/jobdisdis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:background="#FFFFFF"
+                android:fontFamily="@font/roboto_slab"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:scrollbars="vertical"
                 android:text="Job Discription"
                 android:textColor="#000000"
-                android:textSize="16sp"
-                android:fontFamily="@font/roboto_slab"/>
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/jobdisbtn"
@@ -108,9 +120,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
+                android:fontFamily="@font/roboto_slab"
                 android:onClick="openbowser"
-                android:text="Apply Now!!"
-                android:fontFamily="@font/roboto_slab" />
+                android:text="Apply Now!!" />
 
         </LinearLayout>
     </ScrollView>
