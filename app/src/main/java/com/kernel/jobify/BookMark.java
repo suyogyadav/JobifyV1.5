@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,17 +26,25 @@ public class BookMark extends AppCompatActivity {
         bookmarks = getSharedPreferences("bookmarks", 0);
         String abcd = bookmarks.getString("book", "book");
         if (!abcd.equals("book")) {
-            String[] xyz = abcd.split("^^");
+            String[] xyz = abcd.split(";;");
             if (xyz.length > 0) {
+                Log.i("DIVINE",""+xyz.length);
                 for (int i = 0; i < xyz.length; i++) {
                     String[] params = xyz[i].split("##");
                     JobData jobData = new JobData();
                     jobData.setJobTitle(params[0]);
+                    Log.i("DIVINE",""+params[0]);
                     jobData.setJobDisc(params[1]);
+                    Log.i("DIVINE",""+params[1]);
                     jobData.setJobLink(params[2]);
+                    Log.i("DIVINE",""+params[2]);
                     jobData.setJobPhotoLink(params[3]);
+                    Log.i("DIVINE",""+params[3]);
                     jobslist.add(jobData);
                 }
+                Log.i("DIVINE",""+jobslist.size());
+//                TextView textView = findViewById(R.id.booktext);
+//                textView.setText(test);
                 RecyclerView recyclerView = findViewById(R.id.recycleviewbook);
                 GridLayoutManager manager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
                 recyclerView.setLayoutManager(manager);

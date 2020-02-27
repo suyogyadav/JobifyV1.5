@@ -54,61 +54,42 @@ public class JobDisActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         interstitialAd.loadAd(adRequest);
 
-        ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-
         Log.i("jobcheck", "oncreate");
 
+        setContentView(R.layout.activity_jobdis);
 
-        if (info != null && info.isConnected()) {
-            setContentView(R.layout.activity_jobdis);
+        showdata = new JobData();
+        Toolbar toolbar = findViewById(R.id.jobdistoolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
 
-            showdata = new JobData();
-            Toolbar toolbar = findViewById(R.id.jobdistoolbar);
-            toolbar.setNavigationIcon(R.drawable.ic_action_back);
-
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-
-            JobData showdata1 = new JobData();
-            showdata1.setJobTitle(getIntent().getStringExtra("jobTitle"));
-            showdata1.setJobDisc(getIntent().getStringExtra("jobDisc"));
-            showdata1.setJobLink(getIntent().getStringExtra("jobLink"));
-            showdata1.setJobPhotoLink(getIntent().getStringExtra("jobPhotoLink"));
-            progressBar = findViewById(R.id.progressbar);
-            apply = findViewById(R.id.jobdisbtn);
-            disc = findViewById(R.id.jobdisdis);
-            title = findViewById(R.id.jobdistitle);
-            img = findViewById(R.id.jobdisimg);
-
-            if (showdata1.getJobPhotoLink()!= null) {
-                new DownloadImageTask(img,progressBar)
-                        .execute(showdata1.getJobPhotoLink());
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
-            else
-            {
-                img.setImageResource(R.mipmap.ic_launcher);
-                progressBar.setVisibility(View.GONE);
-            }
-            title.setText(showdata1.getJobTitle());
-            disc.setText(showdata1.getJobDisc().replace("_n", "\n"));
-            showdata = showdata1;
+        });
+
+        JobData showdata1 = new JobData();
+        showdata1.setJobTitle(getIntent().getStringExtra("jobTitle"));
+        showdata1.setJobDisc(getIntent().getStringExtra("jobDisc"));
+        showdata1.setJobLink(getIntent().getStringExtra("jobLink"));
+        showdata1.setJobPhotoLink(getIntent().getStringExtra("jobPhotoLink"));
+        progressBar = findViewById(R.id.progressbar);
+        apply = findViewById(R.id.jobdisbtn);
+        disc = findViewById(R.id.jobdisdis);
+        title = findViewById(R.id.jobdistitle);
+        img = findViewById(R.id.jobdisimg);
+
+        if (showdata1.getJobPhotoLink() != null) {
+            new DownloadImageTask(img, progressBar)
+                    .execute(showdata1.getJobPhotoLink());
         } else {
-            setContentView(R.layout.blnt);
-            Toolbar toolbar = findViewById(R.id.blnttoolbar);
-            toolbar.setNavigationIcon(R.drawable.ic_action_back);
-
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
+            img.setImageResource(R.mipmap.ic_launcher);
+            progressBar.setVisibility(View.GONE);
         }
+        title.setText(showdata1.getJobTitle());
+        disc.setText(showdata1.getJobDisc().replace("_n", "\n"));
+        showdata = showdata1;
     }
 
     @Override
@@ -125,7 +106,7 @@ public class JobDisActivity extends AppCompatActivity {
 
     public void openbowser(View view) {
 
-        if (showdata.getJobLink()!=null) {
+        if (showdata.getJobLink() != null) {
             CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
             builder.setToolbarColor(getResources().getColor(R.color.colorPrimary));
             builder.addDefaultShareMenuItem();
@@ -133,19 +114,16 @@ public class JobDisActivity extends AppCompatActivity {
 
             CustomTabsIntent customTabsIntent = builder.build();
             customTabsIntent.launchUrl(this, Uri.parse(showdata.getJobLink()));
-        }
-        else
-        {
-            Toast.makeText(this,"No Apply Link Avilable",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "No Apply Link Avilable", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    public void bookMark(View view)
-    {
+    public void bookMark(View view) {
         ImageButton imgbtn = findViewById(R.id.bookmarkbtn);
         imgbtn.setImageDrawable(getDrawable(R.drawable.ic_bookmark_fill));
-        bookmarks = getSharedPreferences("bookmarks",0);
+        bookmarks = getSharedPreferences("bookmarks", 0);
         StringBuilder builder = new StringBuilder();
         builder.append(showdata.getJobTitle())
                 .append("##")
@@ -154,8 +132,13 @@ public class JobDisActivity extends AppCompatActivity {
                 .append(showdata.getJobLink())
                 .append("##")
                 .append(showdata.getJobPhotoLink())
-                .append("^^");
-        bookmarks.edit().putString("book",builder.toString()).apply();
+                .append(";;");
+        String test = bookmarks.getString("book", "nobooks");
+        if (test.equals("nobooks")) {
+            bookmarks.edit().putString("book", builder.toString()).apply();
+        } else {
+            bookmarks.edit().putString("book", test + builder.toString()).apply();
+        }
     }
 
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -168,7 +151,7 @@ public class JobDisActivity extends AppCompatActivity {
             super.onPreExecute();
         }
 
-        public DownloadImageTask(ImageView bmImage,ProgressBar progressBar) {
+        public DownloadImageTask(ImageView bmImage, ProgressBar progressBar) {
             this.progressBar = progressBar;
             this.bmImage = bmImage;
         }
@@ -186,7 +169,7 @@ public class JobDisActivity extends AppCompatActivity {
             return mIcon11;
         }
 
-        protected void onPostExecute(Bitmap result){
+        protected void onPostExecute(Bitmap result) {
             progressBar.setVisibility(View.GONE);
             bmImage.setImageBitmap(result);
         }

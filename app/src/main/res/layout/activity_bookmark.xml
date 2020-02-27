@@ -28,10 +28,18 @@
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
+    <!--
+        <TextView
+            android:id="@+id/booktext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+    -->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleviewbook"
-        android:layout_below="@id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleviewbook"
+            android:layout_below="@id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
 </RelativeLayout>
