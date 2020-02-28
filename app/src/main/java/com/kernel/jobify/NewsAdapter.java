@@ -119,6 +119,9 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             intent.putExtra("jobDisc", newjob.getJobDisc());
             intent.putExtra("jobLink", newjob.getJobLink());
             intent.putExtra("jobPhotoLink", newjob.getJobPhotoLink());
+            intent.putExtra("jobKey",newjob.getJobKey());
+            Log.i("DIVINE", "newadapter" + newjob.getJobKey());
+            intent.putExtra("jobCat",newjob.getJobCat());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             ctx.startActivity(intent);
         }
@@ -161,8 +164,14 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         protected void onPostExecute(Bitmap result) {
-            progressBar.setVisibility(View.GONE);
-            bmImage.setImageBitmap(result);
+            if (result == null) {
+                Log.i("DIVINE","Faild to load image");
+                progressBar.setVisibility(View.GONE);
+                bmImage.setImageDrawable(ctx.getDrawable(R.drawable.ic_noimage));
+            } else {
+                progressBar.setVisibility(View.GONE);
+                bmImage.setImageBitmap(result);
+            }
         }
     }
 

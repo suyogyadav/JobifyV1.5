@@ -66,7 +66,7 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
 
-    public void retrivedata(String CAT) {
+    public void retrivedata(final String CAT) {
         databaseRef = FirebaseDatabase.getInstance().getReference(CAT);
 
         databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -79,11 +79,13 @@ public class MainActivity2 extends AppCompatActivity {
                     Toast.makeText(context, "Sorry No Jobs Avilable At Time", Toast.LENGTH_SHORT).show();
                 } else {
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
                         JobData jobData = dataSnapshot1.getValue(JobData.class);
+                        jobData.setJobKey(dataSnapshot1.getKey());
+                        jobData.setJobCat(CAT);
                         jobslist.add(jobData);
 
                         Log.i("ABCD", "" + dataSnapshot1.getKey());
+                        Log.i("DIVINE", "" + jobData.getJobKey());
                         Log.i("ABCD", "" + jobData.getJobTitle());
                     }
 

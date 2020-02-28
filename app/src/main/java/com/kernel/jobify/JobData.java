@@ -8,16 +8,34 @@ public class JobData implements Serializable
     public String jobTitle;
     public String jobDisc;
     public String jobLink;
+    public String jobKey;
+    public String jobCat;
 
-    public String getJobApplyLink() {
-        return jobApplyLink;
+    public Boolean getBookMarked() {
+        return isBookMarked;
     }
 
-    public void setJobApplyLink(String jobApplyLink) {
-        this.jobApplyLink = jobApplyLink;
+    public void setBookMarked(Boolean bookMarked) {
+        isBookMarked = bookMarked;
     }
 
-    public String jobApplyLink;
+    public Boolean isBookMarked;
+
+    public String getJobKey() {
+        return jobKey;
+    }
+
+    public void setJobKey(String jobKey) {
+        this.jobKey = jobKey;
+    }
+
+    public String getJobCat() {
+        return jobCat;
+    }
+
+    public void setJobCat(String jobCat) {
+        this.jobCat = jobCat;
+    }
 
     public String getJobPhotoLink() {
         return jobPhotoLink;

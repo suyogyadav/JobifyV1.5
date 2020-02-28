@@ -3,8 +3,6 @@ package com.kernel.jobify;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 
@@ -30,6 +28,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
 import java.io.InputStream;
+import java.util.List;
 
 public class JobDisActivity extends AppCompatActivity {
 
@@ -39,7 +38,9 @@ public class JobDisActivity extends AppCompatActivity {
     TextView title;
     TextView disc;
     ImageView img;
+    ImageButton bookm;
     SharedPreferences bookmarks;
+    String[] test;
 
 
     private InterstitialAd interstitialAd;
@@ -74,12 +75,15 @@ public class JobDisActivity extends AppCompatActivity {
         showdata1.setJobDisc(getIntent().getStringExtra("jobDisc"));
         showdata1.setJobLink(getIntent().getStringExtra("jobLink"));
         showdata1.setJobPhotoLink(getIntent().getStringExtra("jobPhotoLink"));
+        showdata1.setJobKey(getIntent().getStringExtra("jobKey"));
+        Log.i("DIVINE", "jobdisc" + getIntent().getStringExtra("jobKey"));
+        showdata1.setJobCat(getIntent().getStringExtra("jobCat"));
         progressBar = findViewById(R.id.progressbar);
         apply = findViewById(R.id.jobdisbtn);
         disc = findViewById(R.id.jobdisdis);
         title = findViewById(R.id.jobdistitle);
         img = findViewById(R.id.jobdisimg);
-
+        bookm = findViewById(R.id.bookmarkbtn);
         if (showdata1.getJobPhotoLink() != null) {
             new DownloadImageTask(img, progressBar)
                     .execute(showdata1.getJobPhotoLink());
@@ -90,6 +94,34 @@ public class JobDisActivity extends AppCompatActivity {
         title.setText(showdata1.getJobTitle());
         disc.setText(showdata1.getJobDisc().replace("_n", "\n"));
         showdata = showdata1;
+        Log.i("DIVINE", "jobdisc" + showdata1.getJobCat());
+        Log.i("DIVINE", "jobdisc" + showdata1.getJobKey());
+        if (isbookmarked(showdata1.getJobCat(),showdata1.getJobKey()))
+        {
+            bookm.setImageDrawable(getDrawable(R.drawable.ic_bookmark_fill));
+        }
+    }
+
+    private Boolean isbookmarked(String cat,String key) {
+        SharedPreferences bookmarks = getSharedPreferences("bookmarks", 0);
+        String abcd = bookmarks.getString("book", "nobooks");
+        if (!abcd.equals("nobooks")) {
+            test = abcd.split(";;");
+            if (test.length > 0) {
+                for (int i = 0; i < test.length; i++) {
+                    String[]xyz = test[i].split("##");
+                    if (xyz[0].equals(cat) && xyz[1].equals(key))
+                    {
+                        Log.i("DIVINE", "jobdisc" + true);
+                        return true;
+                    }
+                }
+                Log.i("DIVINE", "jobdisc" + false);
+                return false;
+            }
+        }
+        Log.i("DIVINE", "jobdisc" + false);
+        return false;
     }
 
     @Override
@@ -121,23 +153,41 @@ public class JobDisActivity extends AppCompatActivity {
     }
 
     public void bookMark(View view) {
-        ImageButton imgbtn = findViewById(R.id.bookmarkbtn);
-        imgbtn.setImageDrawable(getDrawable(R.drawable.ic_bookmark_fill));
-        bookmarks = getSharedPreferences("bookmarks", 0);
-        StringBuilder builder = new StringBuilder();
-        builder.append(showdata.getJobTitle())
-                .append("##")
-                .append(showdata.getJobDisc())
-                .append("##")
-                .append(showdata.getJobLink())
-                .append("##")
-                .append(showdata.getJobPhotoLink())
-                .append(";;");
-        String test = bookmarks.getString("book", "nobooks");
-        if (test.equals("nobooks")) {
-            bookmarks.edit().putString("book", builder.toString()).apply();
-        } else {
-            bookmarks.edit().putString("book", test + builder.toString()).apply();
+        Log.i("dell",""+!isbookmarked(showdata.getJobCat(),showdata.getJobKey()));
+        if (!isbookmarked(showdata.getJobCat(),showdata.getJobKey())) {
+
+            ImageButton imgbtn = findViewById(R.id.bookmarkbtn);
+            imgbtn.setImageDrawable(getDrawable(R.drawable.ic_bookmark_fill));
+
+            bookmarks = getSharedPreferences("bookmarks", 0);
+            StringBuilder builder = new StringBuilder();
+            Log.i("DIVINE", "jobdisc" + showdata.getJobCat());
+            Log.i("DIVINE", "jobdisc" + showdata.getJobKey());
+            builder.append(showdata.getJobCat())
+                    .append("##")
+                    .append(showdata.getJobKey())
+                    .append(";;");
+
+            String test = bookmarks.getString("book", "nobooks");
+
+            if (test.equals("")||test.equals("nobooks")) {
+                bookmarks.edit().putString("book", builder.toString()).apply();
+            } else {
+                bookmarks.edit().putString("book", test + builder.toString()).apply();
+            }
+
+        }
+        else {
+            bookm.setImageDrawable(getDrawable(R.drawable.ic_bookmark));
+            SharedPreferences bookmarks = getSharedPreferences("bookmarks", 0);
+            String abcd = bookmarks.getString("book", "nobooks");
+            Log.i("loveyouzindagi",abcd);
+            if (!abcd.equals("nobooks"))
+            {
+                String qwerty = abcd.replace((showdata.getJobCat()+"##"+showdata.getJobKey()+";;"),"");
+                Log.i("loveyouzindagi",qwerty);
+                bookmarks.edit().putString("book",qwerty).commit();
+            }
         }
     }
 
@@ -170,8 +220,14 @@ public class JobDisActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Bitmap result) {
-            progressBar.setVisibility(View.GONE);
-            bmImage.setImageBitmap(result);
+            if (result == null) {
+                Log.i("DIVINE", "Faild to load image");
+                progressBar.setVisibility(View.GONE);
+                bmImage.setImageDrawable(getDrawable(R.drawable.ic_noimage));
+            } else {
+                progressBar.setVisibility(View.GONE);
+                bmImage.setImageBitmap(result);
+            }
         }
     }
 }

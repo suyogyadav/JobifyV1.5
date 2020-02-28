@@ -14,7 +14,7 @@
         android:background="@color/colorPrimary">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/newstoolbar"
+            android:id="@+id/booktoolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

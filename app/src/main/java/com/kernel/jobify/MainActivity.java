@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.openDrawer(GravityCompat.START);
     }
 
-    public void retrivedata(String CAT) {
+    public void retrivedata(final String CAT) {
         databaseRef = FirebaseDatabase.getInstance().getReference(CAT);
 
         databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -190,6 +190,8 @@ public class MainActivity extends AppCompatActivity {
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
                         JobData jobData = dataSnapshot1.getValue(JobData.class);
+                        jobData.setJobCat(CAT);
+                        jobData.setJobKey(dataSnapshot1.getKey());
                         jobslist.add(jobData);
 
                         Log.i("ABCD", "" + dataSnapshot1.getKey());
