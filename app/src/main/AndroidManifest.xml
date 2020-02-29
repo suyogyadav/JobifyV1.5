@@ -35,13 +35,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".JobDisActivity" />
+        <activity android:name=".JobDisActivity" >
+            <intent-filter>
+                <action android:name="JobDisActivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".MainActivity2" />
 
         <service
             android:name=".JobifyService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher" />
         <meta-data
             android:name="com.google.android.gms.ads.com.kernel.jobify"
             android:value="ca-app-pub-8714980968157209~5975555023" />

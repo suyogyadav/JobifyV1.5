@@ -1,5 +1,6 @@
 package com.kernel.jobify;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,6 +30,7 @@ import com.google.android.gms.ads.MobileAds;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class JobDisActivity extends AppCompatActivity {
 
@@ -96,6 +98,10 @@ public class JobDisActivity extends AppCompatActivity {
         showdata = showdata1;
         Log.i("DIVINE", "jobdisc" + showdata1.getJobCat());
         Log.i("DIVINE", "jobdisc" + showdata1.getJobKey());
+        if (isValid(showdata.getJobLink()))
+        {
+            apply.setText("Send Email");
+        }
         if (isbookmarked(showdata1.getJobCat(),showdata1.getJobKey()))
         {
             bookm.setImageDrawable(getDrawable(R.drawable.ic_bookmark_fill));
@@ -137,19 +143,26 @@ public class JobDisActivity extends AppCompatActivity {
     }
 
     public void openbowser(View view) {
-
-        if (showdata.getJobLink() != null) {
-            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-            builder.setToolbarColor(getResources().getColor(R.color.colorPrimary));
-            builder.addDefaultShareMenuItem();
-            builder.setShowTitle(true);
-
-            CustomTabsIntent customTabsIntent = builder.build();
-            customTabsIntent.launchUrl(this, Uri.parse(showdata.getJobLink()));
-        } else {
-            Toast.makeText(this, "No Apply Link Avilable", Toast.LENGTH_SHORT).show();
+        if (showdata.getJobLink()!=null && isValid(showdata.getJobLink()))
+        {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("application/octet-stream");
+            intent.putExtra(Intent.EXTRA_EMAIL,showdata.getJobLink());
+            startActivity(Intent.createChooser(intent,""));
         }
+        else {
+            if (showdata.getJobLink() != null) {
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                builder.setToolbarColor(getResources().getColor(R.color.colorPrimary));
+                builder.addDefaultShareMenuItem();
+                builder.setShowTitle(true);
 
+                CustomTabsIntent customTabsIntent = builder.build();
+                customTabsIntent.launchUrl(this, Uri.parse(showdata.getJobLink()));
+            } else {
+                Toast.makeText(this, "No Apply Link Avilable", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public void bookMark(View view) {
@@ -190,6 +203,20 @@ public class JobDisActivity extends AppCompatActivity {
             }
         }
     }
+
+    public static boolean isValid(String email)
+    {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
+    }
+
 
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
