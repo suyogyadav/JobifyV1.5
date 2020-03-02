@@ -17,9 +17,11 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:appComponentFactory">
+        <activity android:name=".AboutUs"></activity>
         <activity android:name=".OpenPlayStoreActivity">
             <intent-filter>
                 <action android:name="OpenPlayStoreActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -44,11 +46,11 @@
         <activity android:name=".JobDisActivity">
             <intent-filter>
                 <action android:name="JobDisActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity2" />
-
 
         <service
             android:name=".JobifyService"

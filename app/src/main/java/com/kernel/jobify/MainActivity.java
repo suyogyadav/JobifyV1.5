@@ -47,6 +47,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     int fori;
     NavigationView navigationView;
     DrawerLayout drawerLayout;
+    FirebaseAnalytics analytics;
 
 
     @Override
@@ -82,6 +84,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.splash_screen);
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         //scheduleJob();
+
+        analytics = FirebaseAnalytics.getInstance(this);
+        Bundle param = new Bundle();
+        param.putString(FirebaseAnalytics.Event.APP_OPEN, "Main Activity");
+        analytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, param);
+
         MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
         settings = this.getSharedPreferences("appInfo", 0);
         firstTime = settings.getBoolean("first_time", true);
@@ -145,10 +153,10 @@ public class MainActivity extends AppCompatActivity {
                                             startActivity(new Intent(context, BookMark.class));
                                             return true;
 
-//                                        case R.id.navigation_about_us:
-//                                            drawerLayout.closeDrawers();
-//                                            startActivity(new Intent(context,BookMark.class));
-//                                            return true;
+                                        case R.id.navigation_about_us:
+                                            drawerLayout.closeDrawers();
+                                            startActivity(new Intent(context, AboutUs.class));
+                                            return true;
                                     }
                                     return false;
                                 }
@@ -301,7 +309,10 @@ public class MainActivity extends AppCompatActivity {
             for (fori = 0; fori < lst.size(); fori++) {
                 editor.putString("cat" + fori, lst.get(fori));
                 Log.i("TYUI", lst.get(fori));
-                runthread(lst.get(fori));
+                Bundle param = new Bundle();
+                param.putString("Category_Selected", "" + lst.get(fori));
+                analytics.logEvent("Category_Selected", param);
+                //runthread(lst.get(fori));
             }
             editor.commit();
             SharedPreferences tockengen = getSharedPreferences("tockengen", 0);
@@ -338,11 +349,11 @@ public class MainActivity extends AppCompatActivity {
                                 drawerLayout.closeDrawers();
                                 startActivity(new Intent(context, BookMark.class));
                                 return true;
-//
-//                                        case R.id.navigation_about_us:
-//                                            drawerLayout.closeDrawers();
-//                                            startActivity(new Intent(context,BookMark.class));
-//                                            return true;
+
+                            case R.id.navigation_about_us:
+                                drawerLayout.closeDrawers();
+                                startActivity(new Intent(context, AboutUs.class));
+                                return true;
                         }
                         return false;
                     }

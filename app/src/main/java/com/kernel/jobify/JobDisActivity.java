@@ -28,6 +28,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -46,6 +47,7 @@ public class JobDisActivity extends AppCompatActivity {
     ImageButton bookm;
     SharedPreferences bookmarks;
     String[] test;
+    FirebaseAnalytics analytics;
 
 
     private InterstitialAd interstitialAd;
@@ -59,10 +61,9 @@ public class JobDisActivity extends AppCompatActivity {
         interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         AdRequest adRequest = new AdRequest.Builder().build();
         interstitialAd.loadAd(adRequest);
-
-        Log.i("jobcheck", "oncreate");
-
         setContentView(R.layout.activity_jobdis);
+
+        analytics = FirebaseAnalytics.getInstance(this);
 
         showdata = new JobData();
         Toolbar toolbar = findViewById(R.id.jobdistoolbar);
@@ -83,6 +84,7 @@ public class JobDisActivity extends AppCompatActivity {
         showdata1.setJobKey(getIntent().getStringExtra("jobKey"));
         Log.i("DIVINE", "jobdisc" + getIntent().getStringExtra("jobKey"));
         showdata1.setJobCat(getIntent().getStringExtra("jobCat"));
+
         AdView adView = findViewById(R.id.jobdiscadView);
         progressBar = findViewById(R.id.progressbar);
         apply = findViewById(R.id.jobdisbtn);
@@ -91,6 +93,11 @@ public class JobDisActivity extends AppCompatActivity {
         title = findViewById(R.id.jobdistitle);
         img = findViewById(R.id.jobdisimg);
         bookm = findViewById(R.id.bookmarkbtn);
+
+        Bundle param = new Bundle();
+        param.putString("Job_Viewed","just view");
+        analytics.logEvent("Job_Viewed",param);
+
         if (showdata1.getJobPhotoLink() != null) {
             new DownloadImageTask(img, progressBar)
                     .execute(showdata1.getJobPhotoLink());
@@ -170,6 +177,11 @@ public class JobDisActivity extends AppCompatActivity {
     }
 
     public void openbowser(View view) {
+
+        Bundle param = new Bundle();
+        param.putString("Job_Apply_Clicked","apply clicked");
+        analytics.logEvent("Job_Apply_Clicked",param);
+
         if (showdata.getJobLink()!=null && isValid(showdata.getJobLink()))
         {
             Intent intent = new Intent(Intent.ACTION_SEND);
@@ -179,6 +191,7 @@ public class JobDisActivity extends AppCompatActivity {
         }
         else {
             if (showdata.getJobLink() != null) {
+
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                 builder.setToolbarColor(getResources().getColor(R.color.colorPrimary));
                 builder.addDefaultShareMenuItem();
@@ -215,6 +228,9 @@ public class JobDisActivity extends AppCompatActivity {
             } else {
                 bookmarks.edit().putString("book", test + builder.toString()).apply();
             }
+            Bundle param = new Bundle();
+            param.putString("Job_Bookmarked","bookmarked");
+            analytics.logEvent("Job_Bookmarked",param);
 
         }
         else {
