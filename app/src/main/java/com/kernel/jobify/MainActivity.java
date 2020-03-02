@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         param.putString(FirebaseAnalytics.Event.APP_OPEN, "Main Activity");
         analytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, param);
 
-        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        MobileAds.initialize(this, "ca-app-pub-8714980968157209~5975555023");
         settings = this.getSharedPreferences("appInfo", 0);
         firstTime = settings.getBoolean("first_time", true);
         catcount = getSharedPreferences("catcount", 0);
@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 4; i < jobslist.size(); i = i + 5) {
             final AdView adView = new AdView(this);
             adView.setAdSize(new AdSize(300, 250));
-            adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+            adView.setAdUnitId("ca-app-pub-8714980968157209/3058581792");
             Log.i("ABCD", "AD IS GETTING PLACED" + i);
             jobslist.add(i, adView);
         }

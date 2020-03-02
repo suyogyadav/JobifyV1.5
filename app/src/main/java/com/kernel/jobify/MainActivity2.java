@@ -49,7 +49,7 @@ public class MainActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        MobileAds.initialize(this, "ca-app-pub-8714980968157209~5975555023");
         setContentView(R.layout.activity_main_2);
 
         Toolbar toolbar = findViewById(R.id.newstoolbar);
@@ -143,7 +143,7 @@ public class MainActivity2 extends AppCompatActivity {
         for (int i = 4; i < jobslist.size(); i = i + 5) {
             final AdView adView = new AdView(this);
             adView.setAdSize(new AdSize(300, 250));
-            adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+            adView.setAdUnitId("ca-app-pub-8714980968157209/3058581792");
             Log.i("ABCD", "AD IS GETTING PLACED" + i);
             jobslist.add(i, adView);
         }

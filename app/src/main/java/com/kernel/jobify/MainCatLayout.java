@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import static com.kernel.jobify.MainActivity.getRoundedCornerBitmap;
 
@@ -24,6 +25,8 @@ public class MainCatLayout extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.maincatlayout);
+
+        MobileAds.initialize(this, "ca-app-pub-8714980968157209~5975555023");
 
         Toolbar toolbar = findViewById(R.id.newstoolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
