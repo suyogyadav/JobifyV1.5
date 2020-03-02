@@ -25,10 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -39,6 +41,7 @@ public class JobDisActivity extends AppCompatActivity {
     Button apply;
     TextView title;
     TextView disc;
+    TextView disc2;
     ImageView img;
     ImageButton bookm;
     SharedPreferences bookmarks;
@@ -80,9 +83,11 @@ public class JobDisActivity extends AppCompatActivity {
         showdata1.setJobKey(getIntent().getStringExtra("jobKey"));
         Log.i("DIVINE", "jobdisc" + getIntent().getStringExtra("jobKey"));
         showdata1.setJobCat(getIntent().getStringExtra("jobCat"));
+        AdView adView = findViewById(R.id.jobdiscadView);
         progressBar = findViewById(R.id.progressbar);
         apply = findViewById(R.id.jobdisbtn);
         disc = findViewById(R.id.jobdisdis);
+        disc2 = findViewById(R.id.jobdisdis2);
         title = findViewById(R.id.jobdistitle);
         img = findViewById(R.id.jobdisimg);
         bookm = findViewById(R.id.bookmarkbtn);
@@ -94,7 +99,29 @@ public class JobDisActivity extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
         }
         title.setText(showdata1.getJobTitle());
-        disc.setText(showdata1.getJobDisc().replace("_n", "\n"));
+
+        String poi = showdata1.getJobDisc().replace("_n","\n");
+        String[] word = poi.split("\n");
+        StringBuilder dis1 = new StringBuilder();
+        StringBuilder dis2 = new StringBuilder();
+
+        for (int i=0;i<word.length;i++)
+        {
+            if (i<word.length/2)
+            {
+                dis1.append(word[i]).append("\n");
+            }
+            else {
+                dis2.append(word[i]).append("\n");
+            }
+        }
+
+        disc.setText(dis1.toString());
+        disc2.setText(dis2.toString());
+
+        AdRequest adRequest1 = new AdRequest.Builder().build();
+        adView.loadAd(adRequest1);
+
         showdata = showdata1;
         Log.i("DIVINE", "jobdisc" + showdata1.getJobCat());
         Log.i("DIVINE", "jobdisc" + showdata1.getJobKey());
