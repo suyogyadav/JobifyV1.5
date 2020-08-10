@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "1090990784835-fpg4cqomvj37i5omgetoo5o4812ki1o5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kernel.jobify",
+            "certificate_hash": "4170eda0aabe159a0cc02714e8da8d55728a6537"
+          }
+        },
+        {
+          "client_id": "1090990784835-il8eppr6fisb0l3o8jrfn2edq3oi3i1m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kernel.jobify",
+            "certificate_hash": "be2005d6da071942f220f86d4f8ace474e8b5539"
+          }
+        },
+        {
           "client_id": "1090990784835-qlbbvvpc96a0j8ifogu26c3mrccien3i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

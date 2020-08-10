@@ -1,5 +1,6 @@
 package com.kernel.jobify;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -31,8 +33,6 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Pattern;
 
 public class JobDisActivity extends AppCompatActivity {
@@ -48,14 +48,14 @@ public class JobDisActivity extends AppCompatActivity {
     SharedPreferences bookmarks;
     String[] test;
     FirebaseAnalytics analytics;
-
+    Activity thisactivity;
 
     private InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        thisactivity = this;
         MobileAds.initialize(this, "ca-app-pub-8714980968157209~5975555023");
         interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId("ca-app-pub-8714980968157209/5070549345");
