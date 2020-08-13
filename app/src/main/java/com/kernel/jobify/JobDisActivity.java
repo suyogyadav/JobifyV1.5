@@ -58,104 +58,96 @@ public class JobDisActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CheckVersion cv = new CheckVersion();
-        if (cv.versionMatch(getApplicationContext())) {
-            thisactivity = this;
-            MobileAds.initialize(this, "ca-app-pub-8714980968157209~5975555023");
-            interstitialAd = new InterstitialAd(this);
-            interstitialAd.setAdUnitId("ca-app-pub-8714980968157209/5070549345");
-            AdRequest adRequest = new AdRequest.Builder().build();
-            interstitialAd.loadAd(adRequest);
-            setContentView(R.layout.activity_jobdis);
 
-            analytics = FirebaseAnalytics.getInstance(this);
+        thisactivity = this;
+        MobileAds.initialize(this, "ca-app-pub-8714980968157209~5975555023");
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId("ca-app-pub-8714980968157209/5070549345");
+        AdRequest adRequest = new AdRequest.Builder().build();
+        interstitialAd.loadAd(adRequest);
+        setContentView(R.layout.activity_jobdis);
 
-            showdata = new JobData();
-            Toolbar toolbar = findViewById(R.id.jobdistoolbar);
-            toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        analytics = FirebaseAnalytics.getInstance(this);
 
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
+        showdata = new JobData();
+        Toolbar toolbar = findViewById(R.id.jobdistoolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
 
-            showdata1 = new JobData();
-            showdata1.setJobTitle(getIntent().getStringExtra("jobTitle"));
-            showdata1.setJobDisc(getIntent().getStringExtra("jobDisc"));
-            showdata1.setJobLink(getIntent().getStringExtra("jobLink"));
-            showdata1.setJobPhotoLink(getIntent().getStringExtra("jobPhotoLink"));
-            showdata1.setJobKey(getIntent().getStringExtra("jobKey"));
-            Log.i("Ritviz", "" + getIntent().getStringExtra("shareLink"));
-            showdata1.setJobCat(getIntent().getStringExtra("jobCat"));
-            showdata1.setShareLink(getIntent().getStringExtra("shareLink"));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-            AdView adView = findViewById(R.id.jobdiscadView);
-            progressBar = findViewById(R.id.progressbar);
-            apply = findViewById(R.id.jobdisbtn);
-            disc = findViewById(R.id.jobdisdis);
-            disc2 = findViewById(R.id.jobdisdis2);
-            title = findViewById(R.id.jobdistitle);
-            img = findViewById(R.id.jobdisimg);
-            bookm = findViewById(R.id.bookmarkbtn);
-            sharebtn = findViewById(R.id.sharebtn);
+        showdata1 = new JobData();
+        showdata1.setJobTitle(getIntent().getStringExtra("jobTitle"));
+        showdata1.setJobDisc(getIntent().getStringExtra("jobDisc"));
+        showdata1.setJobLink(getIntent().getStringExtra("jobLink"));
+        showdata1.setJobPhotoLink(getIntent().getStringExtra("jobPhotoLink"));
+        showdata1.setJobKey(getIntent().getStringExtra("jobKey"));
+        Log.i("Ritviz", "" + getIntent().getStringExtra("shareLink"));
+        showdata1.setJobCat(getIntent().getStringExtra("jobCat"));
+        showdata1.setShareLink(getIntent().getStringExtra("shareLink"));
 
-            Bundle param = new Bundle();
-            param.putString("Job_Viewed", "just view");
-            analytics.logEvent("Job_Viewed", param);
+        AdView adView = findViewById(R.id.jobdiscadView);
+        progressBar = findViewById(R.id.progressbar);
+        apply = findViewById(R.id.jobdisbtn);
+        disc = findViewById(R.id.jobdisdis);
+        disc2 = findViewById(R.id.jobdisdis2);
+        title = findViewById(R.id.jobdistitle);
+        img = findViewById(R.id.jobdisimg);
+        bookm = findViewById(R.id.bookmarkbtn);
+        sharebtn = findViewById(R.id.sharebtn);
 
-            if (showdata1.getJobPhotoLink() != null) {
-                new DownloadImageTask(img, progressBar)
-                        .execute(showdata1.getJobPhotoLink());
+        Bundle param = new Bundle();
+        param.putString("Job_Viewed", "just view");
+        analytics.logEvent("Job_Viewed", param);
+
+        if (showdata1.getJobPhotoLink() != null) {
+            new DownloadImageTask(img, progressBar)
+                    .execute(showdata1.getJobPhotoLink());
+        } else {
+            img.setImageResource(R.mipmap.ic_launcher);
+            progressBar.setVisibility(View.GONE);
+        }
+        title.setText(showdata1.getJobTitle());
+
+        String poi = showdata1.getJobDisc().replace("_n", "\n");
+        String[] word = poi.split("\n");
+        StringBuilder dis1 = new StringBuilder();
+        StringBuilder dis2 = new StringBuilder();
+
+        for (int i = 0; i < word.length; i++) {
+            if (i < word.length / 2) {
+                dis1.append(word[i]).append("\n");
             } else {
-                img.setImageResource(R.mipmap.ic_launcher);
-                progressBar.setVisibility(View.GONE);
-            }
-            title.setText(showdata1.getJobTitle());
-
-            String poi = showdata1.getJobDisc().replace("_n", "\n");
-            String[] word = poi.split("\n");
-            StringBuilder dis1 = new StringBuilder();
-            StringBuilder dis2 = new StringBuilder();
-
-            for (int i = 0; i < word.length; i++) {
-                if (i < word.length / 2) {
-                    dis1.append(word[i]).append("\n");
-                } else {
-                    dis2.append(word[i]).append("\n");
-                }
-            }
-
-            disc.setText(dis1.toString());
-            disc2.setText(dis2.toString());
-
-            AdRequest adRequest1 = new AdRequest.Builder().build();
-            adView.loadAd(adRequest1);
-
-            showdata = showdata1;
-            Log.i("DIVINE", "jobdisc" + showdata1.getJobCat());
-            Log.i("DIVINE", "jobdisc" + showdata1.getJobKey());
-            if (isValid(showdata.getJobLink())) {
-                apply.setText("Send Email");
-            }
-            if (isbookmarked(showdata1.getJobCat(), showdata1.getJobKey())) {
-                bookm.setImageDrawable(getDrawable(R.drawable.ic_bookmark_fill));
+                dis2.append(word[i]).append("\n");
             }
         }
-        else {
-            setContentView(R.layout.version_update);
+
+        disc.setText(dis1.toString());
+        disc2.setText(dis2.toString());
+
+        AdRequest adRequest1 = new AdRequest.Builder().build();
+        adView.loadAd(adRequest1);
+
+        showdata = showdata1;
+        Log.i("DIVINE", "jobdisc" + showdata1.getJobCat());
+        Log.i("DIVINE", "jobdisc" + showdata1.getJobKey());
+        if (isValid(showdata.getJobLink())) {
+            apply.setText("Send Email");
+        }
+        if (isbookmarked(showdata1.getJobCat(), showdata1.getJobKey())) {
+            bookm.setImageDrawable(getDrawable(R.drawable.ic_bookmark_fill));
         }
     }
 
-    public void openPlayStore(View view)
-    {
+    public void openPlayStore(View view) {
         final String packname = getPackageName();
         try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+packname)));
-        }
-        catch (ActivityNotFoundException enf)
-        {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packname)));
+        } catch (ActivityNotFoundException enf) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packname)));
         }
     }
