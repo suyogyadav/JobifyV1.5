@@ -11,6 +11,16 @@ public class JobData implements Serializable
     public String jobKey;
     public String jobCat;
 
+    public String getShareLink() {
+        return shareLink;
+    }
+
+    public void setShareLink(String shareLink) {
+        this.shareLink = shareLink;
+    }
+
+    public String shareLink;
+
     public Boolean getBookMarked() {
         return isBookMarked;
     }

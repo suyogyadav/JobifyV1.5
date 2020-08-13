@@ -1,6 +1,7 @@
 package com.kernel.jobify;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -45,113 +46,145 @@ public class JobDisActivity extends AppCompatActivity {
     TextView disc2;
     ImageView img;
     ImageButton bookm;
+    ImageButton sharebtn;
     SharedPreferences bookmarks;
     String[] test;
     FirebaseAnalytics analytics;
     Activity thisactivity;
+    JobData showdata1;
 
     private InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        thisactivity = this;
-        MobileAds.initialize(this, "ca-app-pub-8714980968157209~5975555023");
-        interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId("ca-app-pub-8714980968157209/5070549345");
-        AdRequest adRequest = new AdRequest.Builder().build();
-        interstitialAd.loadAd(adRequest);
-        setContentView(R.layout.activity_jobdis);
+        CheckVersion cv = new CheckVersion();
+        if (cv.versionMatch(getApplicationContext())) {
+            thisactivity = this;
+            MobileAds.initialize(this, "ca-app-pub-8714980968157209~5975555023");
+            interstitialAd = new InterstitialAd(this);
+            interstitialAd.setAdUnitId("ca-app-pub-8714980968157209/5070549345");
+            AdRequest adRequest = new AdRequest.Builder().build();
+            interstitialAd.loadAd(adRequest);
+            setContentView(R.layout.activity_jobdis);
 
-        analytics = FirebaseAnalytics.getInstance(this);
+            analytics = FirebaseAnalytics.getInstance(this);
 
-        showdata = new JobData();
-        Toolbar toolbar = findViewById(R.id.jobdistoolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+            showdata = new JobData();
+            Toolbar toolbar = findViewById(R.id.jobdistoolbar);
+            toolbar.setNavigationIcon(R.drawable.ic_action_back);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+
+            showdata1 = new JobData();
+            showdata1.setJobTitle(getIntent().getStringExtra("jobTitle"));
+            showdata1.setJobDisc(getIntent().getStringExtra("jobDisc"));
+            showdata1.setJobLink(getIntent().getStringExtra("jobLink"));
+            showdata1.setJobPhotoLink(getIntent().getStringExtra("jobPhotoLink"));
+            showdata1.setJobKey(getIntent().getStringExtra("jobKey"));
+            Log.i("Ritviz", "" + getIntent().getStringExtra("shareLink"));
+            showdata1.setJobCat(getIntent().getStringExtra("jobCat"));
+            showdata1.setShareLink(getIntent().getStringExtra("shareLink"));
+
+            AdView adView = findViewById(R.id.jobdiscadView);
+            progressBar = findViewById(R.id.progressbar);
+            apply = findViewById(R.id.jobdisbtn);
+            disc = findViewById(R.id.jobdisdis);
+            disc2 = findViewById(R.id.jobdisdis2);
+            title = findViewById(R.id.jobdistitle);
+            img = findViewById(R.id.jobdisimg);
+            bookm = findViewById(R.id.bookmarkbtn);
+            sharebtn = findViewById(R.id.sharebtn);
+
+            Bundle param = new Bundle();
+            param.putString("Job_Viewed", "just view");
+            analytics.logEvent("Job_Viewed", param);
+
+            if (showdata1.getJobPhotoLink() != null) {
+                new DownloadImageTask(img, progressBar)
+                        .execute(showdata1.getJobPhotoLink());
+            } else {
+                img.setImageResource(R.mipmap.ic_launcher);
+                progressBar.setVisibility(View.GONE);
             }
-        });
+            title.setText(showdata1.getJobTitle());
 
-        JobData showdata1 = new JobData();
-        showdata1.setJobTitle(getIntent().getStringExtra("jobTitle"));
-        showdata1.setJobDisc(getIntent().getStringExtra("jobDisc"));
-        showdata1.setJobLink(getIntent().getStringExtra("jobLink"));
-        showdata1.setJobPhotoLink(getIntent().getStringExtra("jobPhotoLink"));
-        showdata1.setJobKey(getIntent().getStringExtra("jobKey"));
-        Log.i("DIVINE", "jobdisc" + getIntent().getStringExtra("jobKey"));
-        showdata1.setJobCat(getIntent().getStringExtra("jobCat"));
+            String poi = showdata1.getJobDisc().replace("_n", "\n");
+            String[] word = poi.split("\n");
+            StringBuilder dis1 = new StringBuilder();
+            StringBuilder dis2 = new StringBuilder();
 
-        AdView adView = findViewById(R.id.jobdiscadView);
-        progressBar = findViewById(R.id.progressbar);
-        apply = findViewById(R.id.jobdisbtn);
-        disc = findViewById(R.id.jobdisdis);
-        disc2 = findViewById(R.id.jobdisdis2);
-        title = findViewById(R.id.jobdistitle);
-        img = findViewById(R.id.jobdisimg);
-        bookm = findViewById(R.id.bookmarkbtn);
-
-        Bundle param = new Bundle();
-        param.putString("Job_Viewed","just view");
-        analytics.logEvent("Job_Viewed",param);
-
-        if (showdata1.getJobPhotoLink() != null) {
-            new DownloadImageTask(img, progressBar)
-                    .execute(showdata1.getJobPhotoLink());
-        } else {
-            img.setImageResource(R.mipmap.ic_launcher);
-            progressBar.setVisibility(View.GONE);
-        }
-        title.setText(showdata1.getJobTitle());
-
-        String poi = showdata1.getJobDisc().replace("_n","\n");
-        String[] word = poi.split("\n");
-        StringBuilder dis1 = new StringBuilder();
-        StringBuilder dis2 = new StringBuilder();
-
-        for (int i=0;i<word.length;i++)
-        {
-            if (i<word.length/2)
-            {
-                dis1.append(word[i]).append("\n");
+            for (int i = 0; i < word.length; i++) {
+                if (i < word.length / 2) {
+                    dis1.append(word[i]).append("\n");
+                } else {
+                    dis2.append(word[i]).append("\n");
+                }
             }
-            else {
-                dis2.append(word[i]).append("\n");
+
+            disc.setText(dis1.toString());
+            disc2.setText(dis2.toString());
+
+            AdRequest adRequest1 = new AdRequest.Builder().build();
+            adView.loadAd(adRequest1);
+
+            showdata = showdata1;
+            Log.i("DIVINE", "jobdisc" + showdata1.getJobCat());
+            Log.i("DIVINE", "jobdisc" + showdata1.getJobKey());
+            if (isValid(showdata.getJobLink())) {
+                apply.setText("Send Email");
+            }
+            if (isbookmarked(showdata1.getJobCat(), showdata1.getJobKey())) {
+                bookm.setImageDrawable(getDrawable(R.drawable.ic_bookmark_fill));
             }
         }
-
-        disc.setText(dis1.toString());
-        disc2.setText(dis2.toString());
-
-        AdRequest adRequest1 = new AdRequest.Builder().build();
-        adView.loadAd(adRequest1);
-
-        showdata = showdata1;
-        Log.i("DIVINE", "jobdisc" + showdata1.getJobCat());
-        Log.i("DIVINE", "jobdisc" + showdata1.getJobKey());
-        if (isValid(showdata.getJobLink()))
-        {
-            apply.setText("Send Email");
-        }
-        if (isbookmarked(showdata1.getJobCat(),showdata1.getJobKey()))
-        {
-            bookm.setImageDrawable(getDrawable(R.drawable.ic_bookmark_fill));
+        else {
+            setContentView(R.layout.version_update);
         }
     }
 
-    private Boolean isbookmarked(String cat,String key) {
+    public void openPlayStore(View view)
+    {
+        final String packname = getPackageName();
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+packname)));
+        }
+        catch (ActivityNotFoundException enf)
+        {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packname)));
+        }
+    }
+
+    public void shareClick(View view) {
+        String link = showdata1.getShareLink();
+        Log.i("Ritviz", "" + link);
+        if (link != null) {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, link);
+            sendIntent.setType("text/plain");
+
+            Intent shareIntent = Intent.createChooser(sendIntent, "Share Link To....");
+            startActivity(shareIntent);
+        } else {
+            Toast.makeText(thisactivity, "Link Expired", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private Boolean isbookmarked(String cat, String key) {
         SharedPreferences bookmarks = getSharedPreferences("bookmarks", 0);
         String abcd = bookmarks.getString("book", "nobooks");
         if (!abcd.equals("nobooks")) {
             test = abcd.split(";;");
             if (test.length > 0) {
                 for (int i = 0; i < test.length; i++) {
-                    String[]xyz = test[i].split("##");
-                    if (xyz[0].equals(cat) && xyz[1].equals(key))
-                    {
+                    String[] xyz = test[i].split("##");
+                    if (xyz[0].equals(cat) && xyz[1].equals(key)) {
                         Log.i("DIVINE", "jobdisc" + true);
                         return true;
                     }
@@ -179,17 +212,15 @@ public class JobDisActivity extends AppCompatActivity {
     public void openbowser(View view) {
 
         Bundle param = new Bundle();
-        param.putString("Job_Apply_Clicked","apply clicked");
-        analytics.logEvent("Job_Apply_Clicked",param);
+        param.putString("Job_Apply_Clicked", "apply clicked");
+        analytics.logEvent("Job_Apply_Clicked", param);
 
-        if (showdata.getJobLink()!=null && isValid(showdata.getJobLink()))
-        {
+        if (showdata.getJobLink() != null && isValid(showdata.getJobLink())) {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("application/octet-stream");
-            intent.putExtra(Intent.EXTRA_EMAIL,showdata.getJobLink());
-            startActivity(Intent.createChooser(intent,""));
-        }
-        else {
+            intent.putExtra(Intent.EXTRA_EMAIL, showdata.getJobLink());
+            startActivity(Intent.createChooser(intent, ""));
+        } else {
             if (showdata.getJobLink() != null) {
 
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
@@ -206,8 +237,8 @@ public class JobDisActivity extends AppCompatActivity {
     }
 
     public void bookMark(View view) {
-        Log.i("dell",""+!isbookmarked(showdata.getJobCat(),showdata.getJobKey()));
-        if (!isbookmarked(showdata.getJobCat(),showdata.getJobKey())) {
+        Log.i("dell", "" + !isbookmarked(showdata.getJobCat(), showdata.getJobKey()));
+        if (!isbookmarked(showdata.getJobCat(), showdata.getJobKey())) {
 
             ImageButton imgbtn = findViewById(R.id.bookmarkbtn);
             imgbtn.setImageDrawable(getDrawable(R.drawable.ic_bookmark_fill));
@@ -223,33 +254,30 @@ public class JobDisActivity extends AppCompatActivity {
 
             String test = bookmarks.getString("book", "nobooks");
 
-            if (test.equals("")||test.equals("nobooks")) {
+            if (test.equals("") || test.equals("nobooks")) {
                 bookmarks.edit().putString("book", builder.toString()).apply();
             } else {
                 bookmarks.edit().putString("book", test + builder.toString()).apply();
             }
             Bundle param = new Bundle();
-            param.putString("Job_Bookmarked","bookmarked");
-            analytics.logEvent("Job_Bookmarked",param);
+            param.putString("Job_Bookmarked", "bookmarked");
+            analytics.logEvent("Job_Bookmarked", param);
 
-        }
-        else {
+        } else {
             bookm.setImageDrawable(getDrawable(R.drawable.ic_bookmark));
             SharedPreferences bookmarks = getSharedPreferences("bookmarks", 0);
             String abcd = bookmarks.getString("book", "nobooks");
-            Log.i("loveyouzindagi",abcd);
-            if (!abcd.equals("nobooks"))
-            {
-                String qwerty = abcd.replace((showdata.getJobCat()+"##"+showdata.getJobKey()+";;"),"");
-                Log.i("loveyouzindagi",qwerty);
-                bookmarks.edit().putString("book",qwerty).commit();
+            Log.i("loveyouzindagi", abcd);
+            if (!abcd.equals("nobooks")) {
+                String qwerty = abcd.replace((showdata.getJobCat() + "##" + showdata.getJobKey() + ";;"), "");
+                Log.i("loveyouzindagi", qwerty);
+                bookmarks.edit().putString("book", qwerty).commit();
             }
         }
     }
 
-    public static boolean isValid(String email)
-    {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+    public static boolean isValid(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
                 "A-Z]{2,7}$";

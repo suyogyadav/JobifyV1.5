@@ -3,6 +3,7 @@ package com.kernel.jobify;
 import android.app.Activity;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 
@@ -63,7 +65,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    int versionflag = 0;
     DatabaseReference databaseRef;
     List<Object> jobslist;
     Context context;
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.splash_screen);
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         //scheduleJob();
-
+        CheckVersion();
         analytics = FirebaseAnalytics.getInstance(this);
         Bundle param = new Bundle();
         param.putString(FirebaseAnalytics.Event.APP_OPEN, "Main Activity");
@@ -100,82 +102,128 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (firstTime) {
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putBoolean("first_time", false);
-                    editor.commit();
+                if (versionflag ==0) {
+                    if (firstTime) {
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putBoolean("first_time", false);
+                        editor.commit();
 
-                    setContentView(R.layout.preference_layout);
-                    RecyclerView res = findViewById(R.id.preflist);
-                    res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
-                    res.setAdapter(new ListAdapterPref(getBaseContext()));
-                } else {
-                    if (catcount.getInt("count", 0) == 0) {
                         setContentView(R.layout.preference_layout);
                         RecyclerView res = findViewById(R.id.preflist);
                         res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
                         res.setAdapter(new ListAdapterPref(getBaseContext()));
                     } else {
-                        //setContentView(R.layout.maincatlayout);
-                        SharedPreferences tockengen = getSharedPreferences("tockengen", 0);
-                        boolean avilable = tockengen.getBoolean("avilable", false);
-                        if (avilable) {
-                            Log.i("alan", "status avilable");
-                            sendpreftoserver();
-                            tockengen.edit().putBoolean("avilable", false).commit();
+                        if (catcount.getInt("count", 0) == 0) {
+                            setContentView(R.layout.preference_layout);
+                            RecyclerView res = findViewById(R.id.preflist);
+                            res.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+                            res.setAdapter(new ListAdapterPref(getBaseContext()));
                         } else {
-                            Log.i("alan", "send to server not called");
-                        }
+                            //setContentView(R.layout.maincatlayout);
+                            SharedPreferences tockengen = getSharedPreferences("tockengen", 0);
+                            boolean avilable = tockengen.getBoolean("avilable", false);
+                            if (avilable) {
+                                Log.i("alan", "status avilable");
+                                sendpreftoserver();
+                                tockengen.edit().putBoolean("avilable", false).commit();
+                            } else {
+                                Log.i("alan", "send to server not called");
+                            }
 
-                        ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
-                        NetworkInfo info = cm.getActiveNetworkInfo();
+                            ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
+                            NetworkInfo info = cm.getActiveNetworkInfo();
 
 
-                        if (info != null && info.isConnected()) {
-                            setContentView(R.layout.activity_main);
-                            navigationView = findViewById(R.id.nav_view);
-                            drawerLayout = findViewById(R.id.drawer_layout);
+                            if (info != null && info.isConnected()) {
+                                CheckVersion();
+                                //CheckVersion cv = new CheckVersion();
+                                //if (cv.versionMatch(getApplicationContext())) {
+                                setContentView(R.layout.activity_main);
+                                navigationView = findViewById(R.id.nav_view);
+                                drawerLayout = findViewById(R.id.drawer_layout);
 
-                            prgbar = findViewById(R.id.prgbar);
-                            prgbar.setVisibility(View.VISIBLE);
+                                prgbar = findViewById(R.id.prgbar);
+                                prgbar.setVisibility(View.VISIBLE);
 
-                            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-                                @Override
-                                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                                    switch (menuItem.getItemId()) {
-                                        case R.id.navigation_cat:
-                                            drawerLayout.closeDrawers();
-                                            startActivity(new Intent(context, MainCatLayout.class));
-                                            return true;
+                                navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                                    @Override
+                                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                                        switch (menuItem.getItemId()) {
+                                            case R.id.navigation_cat:
+                                                drawerLayout.closeDrawers();
+                                                startActivity(new Intent(context, MainCatLayout.class));
+                                                return true;
 
-                                        case R.id.navigation_bookmark:
-                                            drawerLayout.closeDrawers();
-                                            startActivity(new Intent(context, BookMark.class));
-                                            return true;
+                                            case R.id.navigation_bookmark:
+                                                drawerLayout.closeDrawers();
+                                                startActivity(new Intent(context, BookMark.class));
+                                                return true;
 
-                                        case R.id.navigation_about_us:
-                                            drawerLayout.closeDrawers();
-                                            startActivity(new Intent(context, AboutUs.class));
-                                            return true;
+                                            case R.id.navigation_about_us:
+                                                drawerLayout.closeDrawers();
+                                                startActivity(new Intent(context, AboutUs.class));
+                                                return true;
+                                        }
+                                        return false;
                                     }
-                                    return false;
-                                }
-                            });
+                                });
 
-                            jobslist = new ArrayList<>();
-                            retrivedata(getcat());
+                                jobslist = new ArrayList<>();
+                                retrivedata(getcat());
+//                            } else {
+//                                setContentView(R.layout.version_update);
+//                            }
 
-                        } else {
-                            setContentView(R.layout.blnt);
+                            } else {
+                                setContentView(R.layout.blnt);
+                            }
+
                         }
-
                     }
                 }
-
+                else {
+                    setContentView(R.layout.version_update);
+                }
                 Log.i("poiu", "activity sleeping");
             }
         }, 3000);
 
+    }
+
+    public void openPlayStore(View view)
+    {
+        final String packname = getPackageName();
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+packname)));
+        }
+        catch (ActivityNotFoundException enf)
+        {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packname)));
+        }
+    }
+
+    public void CheckVersion()
+    {
+        DatabaseReference ref =FirebaseDatabase.getInstance().getReference("AppVersion");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String abcd = snapshot.getValue(String.class);
+                if (abcd !=null && abcd.equals(getString(R.string.version))) {
+                    Log.i("APP", abcd);
+                    versionflag=0;
+                }else {
+                    Log.i("APP", "NULL");
+                    versionflag=1;
+                   // setContentView(R.layout.version_update);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void openDrawer(View view) {

@@ -122,6 +122,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             intent.putExtra("jobKey",newjob.getJobKey());
             Log.i("DIVINE", "newadapter" + newjob.getJobKey());
             intent.putExtra("jobCat",newjob.getJobCat());
+            intent.putExtra("shareLink",newjob.getShareLink());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             ctx.startActivity(intent);
         }

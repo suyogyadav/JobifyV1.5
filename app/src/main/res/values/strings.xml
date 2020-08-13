@@ -2,6 +2,7 @@
     <string name="app_name">Jobify</string>
     <string name="title_activity_news_space">NewsSpace</string>
     <string name="title_activity_main2">MainActivity2</string>
+    <string name="version">2.0</string>
 
     <string-array name="catlist">
         <item>IT</item>
