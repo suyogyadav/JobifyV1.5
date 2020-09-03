@@ -36,15 +36,6 @@
                     android:layout_height="match_parent"
                     android:padding="4dp" />
 
-                <ProgressBar
-                    android:id="@+id/newsprogressbar"
-                    android:minHeight="20dp"
-                    android:minWidth="20dp"
-                    android:layout_centerInParent="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.AppCompat.ProgressBar"/>
-
             </RelativeLayout>
 
 

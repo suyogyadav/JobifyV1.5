@@ -8,16 +8,11 @@
     android:background="@color/colorPrimary"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/loadingappname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+    <ImageView
         android:layout_centerInParent="true"
-        android:text="@string/app_name"
-        android:textSize="35sp"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:fontFamily="@font/roboto_slab_bold"
-        />
+        android:src="@mipmap/blnt"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
 
 </RelativeLayout>

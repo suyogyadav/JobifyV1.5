@@ -4,12 +4,8 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 
-import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,7 +19,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,14 +27,14 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.squareup.picasso.Picasso;
 
-import java.io.InputStream;
 import java.util.regex.Pattern;
 
 public class JobDisActivity extends AppCompatActivity {
 
     JobData showdata;
-    ProgressBar progressBar;
+
     Button apply;
     TextView title;
     TextView disc;
@@ -91,7 +86,7 @@ public class JobDisActivity extends AppCompatActivity {
         showdata1.setShareLink(getIntent().getStringExtra("shareLink"));
 
         AdView adView = findViewById(R.id.jobdiscadView);
-        progressBar = findViewById(R.id.progressbar);
+
         apply = findViewById(R.id.jobdisbtn);
         disc = findViewById(R.id.jobdisdis);
         disc2 = findViewById(R.id.jobdisdis2);
@@ -103,14 +98,9 @@ public class JobDisActivity extends AppCompatActivity {
         Bundle param = new Bundle();
         param.putString("Job_Viewed", "just view");
         analytics.logEvent("Job_Viewed", param);
-
-        if (showdata1.getJobPhotoLink() != null) {
-            new DownloadImageTask(img, progressBar)
-                    .execute(showdata1.getJobPhotoLink());
-        } else {
-            img.setImageResource(R.mipmap.ic_launcher);
-            progressBar.setVisibility(View.GONE);
-        }
+        Picasso.get().load(showdata1.getJobPhotoLink())
+                .error(R.drawable.errorimg)
+                .into(img);
         title.setText(showdata1.getJobTitle());
 
         String poi = showdata1.getJobDisc().replace("_n", "\n");
@@ -278,46 +268,5 @@ public class JobDisActivity extends AppCompatActivity {
         if (email == null)
             return false;
         return pat.matcher(email).matches();
-    }
-
-
-    class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-        ProgressBar progressBar;
-
-        @Override
-        protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
-
-        public DownloadImageTask(ImageView bmImage, ProgressBar progressBar) {
-            this.progressBar = progressBar;
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            if (result == null) {
-                Log.i("DIVINE", "Faild to load image");
-                progressBar.setVisibility(View.GONE);
-                bmImage.setImageDrawable(getDrawable(R.drawable.ic_noimage));
-            } else {
-                progressBar.setVisibility(View.GONE);
-                bmImage.setImageBitmap(result);
-            }
-        }
     }
 }
