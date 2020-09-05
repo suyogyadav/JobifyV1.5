@@ -1,6 +1,5 @@
 package com.kernel.jobify;
 
-import android.app.Activity;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ActivityNotFoundException;
@@ -9,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -23,7 +21,6 @@ import android.os.AsyncTask;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -102,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (versionflag ==0) {
+                if (versionflag == 0) {
                     if (firstTime) {
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putBoolean("first_time", false);
@@ -180,8 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                     }
-                }
-                else {
+                } else {
                     setContentView(R.layout.version_update);
                 }
                 Log.i("poiu", "activity sleeping");
@@ -190,32 +186,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void openPlayStore(View view)
-    {
+    public void openPlayStore(View view) {
         final String packname = getPackageName();
         try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+packname)));
-        }
-        catch (ActivityNotFoundException enf)
-        {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packname)));
+        } catch (ActivityNotFoundException enf) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packname)));
         }
     }
 
-    public void CheckVersion()
-    {
-        DatabaseReference ref =FirebaseDatabase.getInstance().getReference("AppVersion");
+    public void CheckVersion() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("AppVersion");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String abcd = snapshot.getValue(String.class);
-                if (abcd !=null && abcd.equals(getString(R.string.version))) {
+                if (abcd != null && abcd.equals(getString(R.string.version))) {
                     Log.i("APP", abcd);
-                    versionflag=0;
-                }else {
+                    versionflag = 0;
+                } else {
                     Log.i("APP", "NULL");
-                    versionflag=1;
-                   // setContentView(R.layout.version_update);
+                    versionflag = 1;
+                    // setContentView(R.layout.version_update);
                 }
             }
 
