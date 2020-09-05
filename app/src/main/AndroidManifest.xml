@@ -19,7 +19,8 @@
         tools:replace="android:appComponentFactory">
 
         <activity android:name=".LinkOpen"
-            android:noHistory="true">
+            android:noHistory="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>

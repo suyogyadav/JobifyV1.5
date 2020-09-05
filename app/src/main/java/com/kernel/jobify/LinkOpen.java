@@ -32,6 +32,7 @@ public class LinkOpen extends AppCompatActivity {
     ProgressBar bar;
     Context ctx;
     Uri deepLink = null;
+    String CAT="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +53,17 @@ public class LinkOpen extends AppCompatActivity {
                         public void run() {
                             if (versionflag == 0) {
                                 deepLink = pendingDynamicLinkData.getLink();
-                                String cat = deepLink.getQueryParameter("cat");
-                                String id = deepLink.getQueryParameter("id");
+                                String cat="",id="";
+                                try{
+                                    cat = deepLink.getQueryParameter("cat");
+                                    id = deepLink.getQueryParameter("id");
+                                    CAT = cat;
+                                }catch (NullPointerException exp)
+                                {
+                                    ctx.startActivity(new Intent(ctx,MainActivity.class));
+                                    finish();
+                                }
+
                                 dataref = FirebaseDatabase.getInstance().getReference(cat + "/" + id);
 
                                 dataref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -61,7 +71,7 @@ public class LinkOpen extends AppCompatActivity {
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         JobData newjob = snapshot.getValue(JobData.class);
                                         newjob.setJobKey(snapshot.getKey());
-                                        newjob.setJobCat(cat);
+                                        newjob.setJobCat(CAT);
                                         Intent intent = new Intent(ctx, JobDisActivity.class);
                                         intent.putExtra("jobTitle", newjob.getJobTitle());
                                         intent.putExtra("jobDisc", newjob.getJobDisc());
@@ -88,6 +98,10 @@ public class LinkOpen extends AppCompatActivity {
                         }
                     }, 3000);
                     //Toast.makeText(LinkOpen.this, ""+cat+""+id, Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    ctx.startActivity(new Intent(ctx,MainActivity.class));
                 }
             }
         })
