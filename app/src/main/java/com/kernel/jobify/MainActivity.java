@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -160,6 +161,16 @@ public class MainActivity extends AppCompatActivity {
                                                 drawerLayout.closeDrawers();
                                                 startActivity(new Intent(context, AboutUs.class));
                                                 return true;
+
+                                            case R.id.navigation_privacy:
+                                                drawerLayout.closeDrawers();
+                                                openbowser("https://jobify.co.in/privacy.html");
+                                                return true;
+
+                                            case R.id.navigation_dis:
+                                                drawerLayout.closeDrawers();
+                                                openbowser("https://jobify.co.in/dis.html");
+                                                return true;
                                         }
                                         return false;
                                     }
@@ -216,6 +227,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void openbowser(String link) {
+        Bundle param = new Bundle();
+        param.putString("Job_Apply_Clicked", "apply clicked");
+        analytics.logEvent("Job_Apply_Clicked", param);
+
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setToolbarColor(getResources().getColor(R.color.colorPrimary));
+        builder.addDefaultShareMenuItem();
+        builder.setShowTitle(true);
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.launchUrl(this, Uri.parse(link));
     }
 
     public void openDrawer(View view) {
@@ -393,6 +417,16 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.navigation_about_us:
                                 drawerLayout.closeDrawers();
                                 startActivity(new Intent(context, AboutUs.class));
+                                return true;
+
+                            case R.id.navigation_privacy:
+                                drawerLayout.closeDrawers();
+                                openbowser("https://jobify.co.in/privacy.html");
+                                return true;
+
+                            case R.id.navigation_dis:
+                                drawerLayout.closeDrawers();
+                                openbowser("https://jobify.co.in/dis.html");
                                 return true;
                         }
                         return false;

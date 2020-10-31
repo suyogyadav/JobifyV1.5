@@ -18,4 +18,16 @@
             android:icon="@drawable/ic_news"
             android:title="About Us" />
     </group>
+    <group android:id="@+id/grp4">
+        <item
+            android:id="@+id/navigation_privacy"
+            android:icon="@drawable/ic_policy"
+            android:title="Privacy" />
+    </group>
+    <group android:id="@+id/grp5">
+        <item
+            android:id="@+id/navigation_dis"
+            android:icon="@drawable/ic_dis"
+            android:title="Disclaimer" />
+    </group>
 </menu>
